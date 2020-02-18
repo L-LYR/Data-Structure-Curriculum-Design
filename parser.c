@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "enumVar.h"
-#include "stack.h"
+#include "ast.h"
+
 extern int line;
 extern char *src; // tokenizer.c
 extern char *data;
@@ -13,9 +15,8 @@ extern void match(int tk);
 extern int nextToken();
 extern void initSymbolTab();
 
-// STACK_TEMPLATE(int, IntStack); // for ast node
-// int *ast,                      // root of AST
-//     *curNode;
+extern int *lastNode; // ast.c
+extern int *l;        // AST list branch help-pointer
 
 int baseType; // the type of a declaration
 int exprType; // the type of an expression
@@ -28,6 +29,7 @@ static void enumDeclaration()
     int i;
 
     i = 0;
+    l = (int *)lastNode[nodelist];
 
     while (token != '}')
     {
@@ -44,6 +46,8 @@ static void enumDeclaration()
                 printf("Line %d: redeclaration of deferent type\n", line);
             else if (currentId[Class] == Num)
                 printf("Line %d: redeclaration of enumerator\n", line);
+            else if (currentId[Class] == Fun)
+                printf("Line %d: redeclaration of function\n", line);
             exit(-1);
         }
 
@@ -63,17 +67,21 @@ static void enumDeclaration()
         currentId[Class] = Num;
         currentId[Type] = INT;
         currentId[Value] = i++;
+        *l++ = (int)currentId;
 
         if (token == ',')
             nextToken();
     }
-    
 }
 
 static void functionParameter()
 {
     int type;
     int params;
+
+    int *pl = (int *)makeList();
+
+    l[paralist] = (int)pl;
 
     params = 0;
     while (token != ')')
@@ -92,14 +100,26 @@ static void functionParameter()
             type = type + PTR;
         }
 
+        if (token == Void)
+        {
+            nextToken();
+            pl[paraType] = Void;
+            return;
+        }
+
         if (token != Id)
         {
             printf("Line %d: bad parameter declaration\n", line);
             exit(-1);
         }
-        if (currentId[Class] == Loc)
+        if (currentId[Class])
         {
-            printf("Line %d: duplicate parameter declaration\n", line);
+            if (currentId[Class] == Loc)
+                printf("Line %d: duplicate parameter declaration\n", line);
+            else if (currentId[Class] == Fun)
+                printf("Line %d: redeclaration of function\n", line);
+            else if (currentId[Class] == Num)
+                printf("Line %d: redeclaration of deferent type\n", line);
             exit(-1);
         }
 
@@ -110,12 +130,19 @@ static void functionParameter()
         currentId[Type] = type;
         currentId[BValue] = currentId[Value];
         currentId[Value] = params++;
+
+        pl[paraName] = (int)currentId;
+        pl[paraType] = type;
+        pl = pl + ParaNodeSize;
+
         if (token == ',')
             match(',');
     }
     idxOfBp = params + 1;
 }
+
 // forward declaration
+/*
 static void parseExpression(int level);
 static void unitUnary()
 {
@@ -246,9 +273,9 @@ static void unitUnary()
     }
     else if (token == Mul)
     {
-        match('Mul');
+        match(Mul);
         parseExpression(Inc);
-        if (parseExpression >= BASE)
+        if (exprType >= BASE)
             exprType = exprType - PTR;
         else
         {
@@ -318,6 +345,8 @@ static void binaryOperator(int level)
         }
     }
 }
+
+
 static void parseExpression(int level)
 {
     if (token == 0)
@@ -376,9 +405,12 @@ static void functionBody()
                 printf("Line %d: bad local declaration\n", line);
                 exit(-1);
             }
-            if (currentId[Class] == Loc)
+            if (currentId[Class])
             {
-                printf("Line %d: redeclaration of local variable\n", line);
+                if (currentId[Class] == Loc)
+                    printf("Line %d: duplicate parameter declaration\n", line);
+                else if (currentId[Class] == Fun)
+                    printf("Line %d: redeclaration of function\n", line);
                 exit(-1);
             }
 
@@ -405,21 +437,37 @@ static void functionBody()
     // TODO: handle the return statement
     // *++text = LEV;
 }
+*/
 
 static void functionDeclaration()
 {
+
     // Example: Function Name (Parameter List) {Function Body}
     match('(');
     functionParameter();
     match(')');
+
+    // if (token == '{')
+    // {
+    //     if (((int *)l[varName])[status])
+    //     {
+    //         printf("Line %d: redefinition of function\n", line);
+    //         exit(-1);
+    //     }
+    //     TransToFunDef();
+    //     match('{');
+    //     functionBody();
+    // }
+
     // TODO: distinguish the function definition and function declaration
-    match('{');
-    functionBody();
+    // match('{');
+    // functionBody();
     // Here we do not need to match '}'.
     // It will be matched in globalDeclaration() to jump out the while().
 
     // exit function
     // cover the local variables in function body with global variables which have the same name
+
     currentId = symbols;
     while (currentId[Token])
     {
@@ -442,10 +490,17 @@ static void globalDeclaration()
 
     if (token == Enum)
     {
+        DecNode();
+
         match(Enum);
         if (token != '{')
+        {
             match(Id);
-        else if (token == '{')
+            lastNode[nodename] = (int)currentId;
+        }
+        else
+            lastNode[nodename] = 0;
+        if (token == '{')
         {
             match('{');
             enumDeclaration();
@@ -454,15 +509,25 @@ static void globalDeclaration()
         match(';');
         return;
     }
+
     // parse type name
     // Example: int | char [*]
     if (token == Int)
+    {
+        DecNode();
+        l = (int *)lastNode[nodelist];
+
         match(Int);
+    }
     else if (token == Char)
     {
-        match(Char);
         baseType = CHAR;
+        DecNode();
+        l = (int *)lastNode[nodelist];
+
+        match(Char);
     }
+
     // parse the comma seperated variable declaration
     // Example: int [*] a, b, ... ;
     while (token != ';' && token != '}')
@@ -481,13 +546,15 @@ static void globalDeclaration()
             exit(-1);
         }
 
-        if (currentId[Class])
+        // redeclaration
+        if (currentId[Class] == Num)
         {
-            // redeclaration
-            if (currentId[Class] == Num)
-                printf("Line %d: redeclaration of deferent type\n", line);
-            else if (currentId[Class] == Glo)
-                printf("Line %d: redeclaration of global variable\n", line);
+            printf("Line %d: redeclaration of deferent type\n", line);
+            exit(-1);
+        }
+        if (currentId[Class] == Glo)
+        {
+            printf("Line %d: redeclaration of global variable\n", line);
             exit(-1);
         }
 
@@ -498,14 +565,19 @@ static void globalDeclaration()
             currentId[Class] = Fun;
             // currentId[Value] = (int)(text + 1); // memory address of function or entry
             // TODO: here we need to create the node of function
+            l[ptr] = type - baseType;
+            l[varName] = (int)currentId;
             functionDeclaration();
         }
         else
         {
-            currentId[Class] = Glo;       // global variable
-            currentId[Value] = (int)data; // assign memory
-            data = data + sizeof(int);
+            currentId[Class] = Glo; // global variable
+            // currentId[Value] = (int)data; // assign memory
+            // data = data + sizeof(int);
+            l[ptr] = type - baseType;
+            l[varName] = (int)currentId;
         }
+        l = l + GloDecNodeSize;
         if (token == ',')
             match(',');
     }
@@ -518,4 +590,5 @@ void syntaxAnalysis()
     nextToken();
     while (token > 0)
         globalDeclaration();
+    display();
 }

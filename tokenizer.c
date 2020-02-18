@@ -6,7 +6,7 @@
 extern int line; // memoryPool.c
 extern int poolSize;
 extern int *ast; // ast.c
-extern int *lastNode;
+extern int *curNode;
 
 // TODO: user can change the size of memory pool
 int *symbols,   // symbol table
@@ -320,16 +320,14 @@ void initSymbolTab()
     line = 1;
     memset(symbols, 0, poolSize);
 
-    src = "char else enum if int return sizeof while void";
+    src = "char else enum if int return sizeof while break continue void";
     i = Char;
-    while (i <= While)
+    while (i <= Void)
     {
         nextToken();
         currentId[Token] = i++;
     }
-    nextToken();
-    currentId[Token] = Char;
 
     src = oldSrc;
-    lastNode = ast;
+    curNode = ast;
 }

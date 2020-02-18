@@ -12,7 +12,7 @@ extern int nextToken();
 extern void initSymbolTab();
 
 char *map[] = {
-    "char", "else", "enum", "if", "int", "return", "sizeof", "while",
+    "char", "else", "enum", "if", "int", "return", "sizeof", "while", "Break", "Continue", "void",
     "=", "?", "|", "&", "||", "^", "&&", "==", "!=", "<", ">", "<=",
     ">=", "<<", ">>", "+", "-", "*", "/", "%%", "++", "--", "["};
 
@@ -50,7 +50,7 @@ void lexicalAnalysis()
         }
         else if (ret == ID)
         {
-            p = lastPos;
+            p = (char *)currentId[Name];
             i = currentId[Len];
             printf("Line %d: %.*s ---- <identifier>\n\n", line, i, p);
         }

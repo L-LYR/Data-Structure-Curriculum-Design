@@ -30,6 +30,7 @@ enum class_token
     While,
     Break,
     Continue,
+    Void,
     Assign,
     Cond,
     Lor,
@@ -68,12 +69,13 @@ enum identifier
     BType, // B_____ is for global variable
     BClass,
     BValue,
-    Len, // length of Name, easy for display
+    Len,    // length of Name, easy for display
+    status, // whether function has been defined
     IdSize
 };
 
 // types of variable/function
-enum type
+enum var_fun_type
 {
     CHAR = 1,
     INT,
@@ -88,28 +90,45 @@ enum dec
     Local
 };
 
-enum NodeType
+enum ast_node_type
 {
     EnumDec = 512,
-    VarDec,
-    FunDec,
+    GloDec,
+    // TODO: statements
+    FunDef,
 
+    LocDec,
+
+    statement,
     UnaryExpr,
     BinaryExpr,
     FunCall,
     CondExpr,
     UnitExpr, // only for single Variable, String, Num, Empty.
-
-    // TODO: statements
-    FunDef,
 };
+
 // fields of AST node
-enum node
+enum ast_node
 {
-    nodeType,
-    name,
-    basetype = 1,
-    range,
-    list,
-    nodeSize,
+    nodetype,
+    nodename,
+    nodelist,
+    base,
+    body = 3,
+    nodesize,
+};
+
+enum glo_dec_list
+{
+    varName,
+    ptr,
+    paralist,
+    GloDecNodeSize,
+};
+
+enum para_list
+{
+    paraName,
+    paraType,
+    ParaNodeSize,
 };

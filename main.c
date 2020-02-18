@@ -11,6 +11,6 @@ int main(void)
     readFromFile();
     lexicalAnalysis();
 
-    // syntaxAnalysis();
+    syntaxAnalysis();
     return 0;
 }
