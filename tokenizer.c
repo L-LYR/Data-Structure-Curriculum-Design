@@ -4,9 +4,6 @@
 #include "enumVar.h"
 
 extern int line; // memoryPool.c
-extern int poolSize;
-extern int *ast; // ast.c
-extern int *curNode;
 
 // TODO: user can change the size of memory pool
 int *symbols,   // symbol table
@@ -311,23 +308,4 @@ void match(int tk)
             printf("Line %d: expected token: '%c'\n", line, tk);
         exit(-1);
     }
-}
-// initialize symbol table
-void initSymbolTab()
-{
-    int i;
-
-    line = 1;
-    memset(symbols, 0, poolSize);
-
-    src = "char else enum if int return sizeof while break continue void";
-    i = Char;
-    while (i <= Void)
-    {
-        nextToken();
-        currentId[Token] = i++;
-    }
-
-    src = oldSrc;
-    curNode = ast;
 }

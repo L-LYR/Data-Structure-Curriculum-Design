@@ -11,4 +11,6 @@ void lexicalAnalysis();
 
 void syntaxAnalysis();
 
+void displayAST();
+
 #endif

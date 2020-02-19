@@ -1,20 +1,35 @@
 #include <stdio.h>
+#include <string.h>
 #include "enumVar.h"
 
-extern int line;  // memoryPool.c
-extern char *src; // tokenizer.c
-extern char *lastPos;
-extern int *currentId;
-extern int token;
-extern int tokenVal;
-
+extern int line, poolSize;           // memoryPool.c
+extern char *src, *oldSrc, *lastPos; // tokenizer.c
+extern int *currentId, *symbols, token, tokenVal;
 extern int nextToken();
-extern void initSymbolTab();
 
 char *map[] = {
     "char", "else", "enum", "if", "int", "return", "sizeof", "while", "Break", "Continue", "void",
     "=", "?", "|", "&", "||", "^", "&&", "==", "!=", "<", ">", "<=",
     ">=", "<<", ">>", "+", "-", "*", "/", "%%", "++", "--", "["};
+
+// initialize symbol table
+void initSymbolTab()
+{
+    int i;
+
+    line = 1;
+    memset(symbols, 0, poolSize);
+
+    src = "char else enum if int return sizeof while break continue void";
+    i = Char;
+    while (i <= Void)
+    {
+        nextToken();
+        currentId[Token] = i++;
+    }
+
+    src = oldSrc;
+}
 
 void lexicalAnalysis()
 {

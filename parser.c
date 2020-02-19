@@ -4,19 +4,21 @@
 #include "enumVar.h"
 #include "ast.h"
 
-extern int line;
-extern char *src; // tokenizer.c
-extern char *data;
-extern int *currentId;
-extern int *symbols;
-extern int token;
-extern int tokenVal;
+extern int line, poolSize; // memoryPool.c
+
+extern char *src, *data; // tokenizer.c
+extern int *currentId, *symbols, token, tokenVal;
 extern void match(int tk);
 extern int nextToken();
-extern void initSymbolTab();
 
-extern int *lastNode; // ast.c
-extern int *l;        // AST list branch help-pointer
+extern void initSymbolTab(); // lexer.c
+
+extern Node *ast, *curNode; // ast.c
+extern void *setNode(int t);
+
+void *cn;
+Var *vl;
+Func *fl;
 
 int baseType; // the type of a declaration
 int exprType; // the type of an expression
@@ -29,7 +31,8 @@ static void enumDeclaration()
     int i;
 
     i = 0;
-    l = (int *)lastNode[nodelist];
+
+    vl = ((EnumDecNode *)cn)->vl;
 
     while (token != '}')
     {
@@ -47,7 +50,7 @@ static void enumDeclaration()
             else if (currentId[Class] == Num)
                 printf("Line %d: redeclaration of enumerator\n", line);
             else if (currentId[Class] == Fun)
-                printf("Line %d: redeclaration of function\n", line);
+                printf("Line %d: redeclaration of deferent type\n", line);
             exit(-1);
         }
 
@@ -67,7 +70,10 @@ static void enumDeclaration()
         currentId[Class] = Num;
         currentId[Type] = INT;
         currentId[Value] = i++;
-        *l++ = (int)currentId;
+
+        memcpy(vl->id, (char *)currentId[Name], currentId[Len]);
+        vl->t = currentId[Value];
+        vl++;
 
         if (token == ',')
             nextToken();
@@ -78,11 +84,7 @@ static void functionParameter()
 {
     int type;
     int params;
-
-    int *pl = (int *)makeList();
-
-    l[paralist] = (int)pl;
-
+    Var *p = fl->pl;
     params = 0;
     while (token != ')')
     {
@@ -94,17 +96,17 @@ static void functionParameter()
             type = CHAR;
             match(Char);
         }
+        else if (token == Void)
+        {
+            type = VOID;
+            nextToken();
+            return;
+        }
+
         while (token == Mul) // pointer type
         {
             match(Mul);
             type = type + PTR;
-        }
-
-        if (token == Void)
-        {
-            nextToken();
-            pl[paraType] = Void;
-            return;
         }
 
         if (token != Id)
@@ -130,314 +132,14 @@ static void functionParameter()
         currentId[Type] = type;
         currentId[BValue] = currentId[Value];
         currentId[Value] = params++;
-
-        pl[paraName] = (int)currentId;
-        pl[paraType] = type;
-        pl = pl + ParaNodeSize;
-
+        memcpy(p->id, (char *)currentId[Name], currentId[Len]);
+        p->t = type;
+        p++;
         if (token == ',')
             match(',');
     }
     idxOfBp = params + 1;
 }
-
-// forward declaration
-/*
-static void parseExpression(int level);
-static void unitUnary()
-{
-    int *id;
-    int tmp;
-    if (token == Num)
-    {
-        match(Num);
-        exprType = INT;
-    }
-    else if (token == '"')
-    {
-
-        match('"');
-        while (token == '"')
-            match('"');
-
-        // append the end of string character '\0', all the data are default
-        // to 0, so just move data one position forward.
-        data = (char *)(((int)data + sizeof(int)) & (-sizeof(int)));
-        exprType = PTR;
-    }
-    else if (token == Sizeof)
-    {
-        match(Sizeof);
-        match('(');
-        exprType = INT;
-        if (token == Int)
-            match(Int);
-        else if (token == Char)
-        {
-            match(Char);
-            exprType = CHAR;
-        }
-
-        while (token == Mul)
-        {
-            match(Mul);
-            exprType = exprType + PTR;
-        }
-
-        if (token == Id)
-        {
-            if (currentId[Type] == 0)
-            {
-                printf("Line %d: Undeclared variable\n", line);
-                exit(-1);
-            }
-            exprType = currentId[Type];
-        }
-
-        if (token == Num)
-            exprType = INT;
-
-        match(')');
-
-        // (exprType == CHAR) ? sizeof(char) : sizeof(int);
-
-        exprType = INT;
-    }
-    else if (token == Id)
-    {
-        match(Id);
-        id = currentId;
-        if (token == '(')
-        {
-            if (id[Class] != Fun)
-            {
-                printf("Line %d: bad function call\n", line);
-                exit(-1);
-            }
-
-            match('('); // function call;
-            while (token != ')')
-            {
-                parseExpression(Assign);
-                if (token == ',')
-                    match(',');
-            }
-
-            match(')');
-
-            exprType = id[Type];
-        }
-        else if (id[Class] == Num) // enum
-        {
-            exprType = INT;
-        }
-        else // variable
-        {
-            if (id[Class] == Loc)
-            {
-            }
-            else if (id[Class] == Glo)
-            {
-            }
-            else
-            {
-                printf("Line %d: Undeclared variable\n", line);
-                exit(-1);
-            }
-        }
-        exprType = id[Type];
-    }
-    else if (token == '(') // cast
-    {
-        match('(');
-        if (token == Int || token == Char)
-        {
-            tmp = (token == Char) ? CHAR : INT;
-            match(token);
-            while (token == Mul)
-            {
-                match(Mul);
-                tmp = tmp + PTR;
-            }
-
-            match(')');
-
-            parseExpression(Inc);
-            exprType = tmp;
-        }
-        else // normal
-        {
-            parseExpression(Assign);
-            match(')');
-        }
-    }
-    else if (token == Mul)
-    {
-        match(Mul);
-        parseExpression(Inc);
-        if (exprType >= BASE)
-            exprType = exprType - PTR;
-        else
-        {
-            printf("Line %d: bad dereference\n", line);
-            exit(-1);
-        }
-    }
-    else if (token == And)
-    {
-        match(And);
-        parseExpression(Inc);
-        // TODO: error?
-        exprType = exprType + PTR;
-    }
-    else if (token == '!')
-    {
-        match('!');
-        parseExpression(Inc);
-
-        exprType = INT;
-    }
-    else if (token == '~')
-    {
-        match('~');
-        parseExpression(Inc);
-
-        exprType = INT;
-    }
-    else if (token == Sub)
-    { // -value
-        match(Sub);
-        if (token == Num)
-        {
-            match(Num);
-        }
-        else
-        {
-            parseExpression(Inc);
-        }
-
-        exprType = INT;
-    }
-    else if (token == Inc || token == Dec)
-    {
-        tmp = token;
-        match(token);
-        parseExpression(Inc);
-
-        // TODO: how to judge
-    }
-    else
-    {
-        printf("Line %d: bad parseExpression\n", line);
-        exit(-1);
-    }
-}
-
-static void binaryOperator(int level)
-{
-    int tmp;
-    while (token >= level)
-    {
-        tmp = exprType;
-        if (token == Assign)
-        {
-            match(Assign);
-        }
-    }
-}
-
-
-static void parseExpression(int level)
-{
-    if (token == 0)
-    {
-        printf("Line %d: unexpected token EOF of parseExpression\n", line);
-        exit(-1);
-    }
-    unitUnary();
-    binaryOperator(level);
-}
-
-static void parseStatement()
-{
-    // int *a, *b; // branches
-
-    // Example: if(expression) <statement> [else <statement>]
-    if (token == If)
-    {
-        match(If);
-        match('(');
-        parseExpression(Assign); // condition
-        match(')');
-
-        parseStatement();
-
-        if (token == Else)
-        {
-            match(Else);
-            parseStatement();
-        }
-    }
-}
-
-static void functionBody()
-{
-    int localPos;
-    int type;
-    localPos = idxOfBp;
-
-    // declarations
-    while (token == Int || token == Char)
-    {
-        baseType = (token == Int) ? INT : CHAR;
-        match(token);
-
-        while (token != ';')
-        {
-            type = baseType;
-            while (token == Mul) // pointer
-            {
-                match(Mul);
-                type = type + PTR;
-            }
-            if (token != Id)
-            {
-                printf("Line %d: bad local declaration\n", line);
-                exit(-1);
-            }
-            if (currentId[Class])
-            {
-                if (currentId[Class] == Loc)
-                    printf("Line %d: duplicate parameter declaration\n", line);
-                else if (currentId[Class] == Fun)
-                    printf("Line %d: redeclaration of function\n", line);
-                exit(-1);
-            }
-
-            match(Id);
-
-            currentId[BClass] = currentId[Class];
-            currentId[Class] = Loc;
-            currentId[BType] = currentId[Type];
-            currentId[Type] = type;
-            currentId[BValue] = currentId[Value];
-            currentId[Value] = ++localPos;
-
-            if (token == ',')
-                match(',');
-        }
-        match(';');
-    }
-    // TODO: handle the function node
-    // *++text = ENT;
-    // *++text = localPos - idxOfBp;
-
-    while (token != '}')
-        parseStatement();
-    // TODO: handle the return statement
-    // *++text = LEV;
-}
-*/
 
 static void functionDeclaration()
 {
@@ -446,18 +148,6 @@ static void functionDeclaration()
     match('(');
     functionParameter();
     match(')');
-
-    // if (token == '{')
-    // {
-    //     if (((int *)l[varName])[status])
-    //     {
-    //         printf("Line %d: redefinition of function\n", line);
-    //         exit(-1);
-    //     }
-    //     TransToFunDef();
-    //     match('{');
-    //     functionBody();
-    // }
 
     // TODO: distinguish the function definition and function declaration
     // match('{');
@@ -490,16 +180,15 @@ static void globalDeclaration()
 
     if (token == Enum)
     {
-        DecNode();
+        cn = setNode(EnumDec);
 
         match(Enum);
         if (token != '{')
         {
             match(Id);
-            lastNode[nodename] = (int)currentId;
+            memcpy(((EnumDecNode *)cn)->id, (char *)currentId[Name], currentId[Len]);
         }
-        else
-            lastNode[nodename] = 0;
+
         if (token == '{')
         {
             match('{');
@@ -513,20 +202,22 @@ static void globalDeclaration()
     // parse type name
     // Example: int | char [*]
     if (token == Int)
-    {
-        DecNode();
-        l = (int *)lastNode[nodelist];
-
         match(Int);
-    }
     else if (token == Char)
     {
         baseType = CHAR;
-        DecNode();
-        l = (int *)lastNode[nodelist];
-
         match(Char);
     }
+    else if (token == Void)
+    {
+        baseType = VOID;
+        match(Void);
+    }
+
+    cn = setNode(GloDec);
+
+    vl = ((GloDecNode *)cn)->vl;
+    fl = ((GloDecNode *)cn)->fl;
 
     // parse the comma seperated variable declaration
     // Example: int [*] a, b, ... ;
@@ -563,21 +254,27 @@ static void globalDeclaration()
         if (token == '(')
         {
             currentId[Class] = Fun;
+            memcpy(fl->id, (char *)currentId[Name], currentId[Len]);
+            fl->rt = type;
             // currentId[Value] = (int)(text + 1); // memory address of function or entry
-            // TODO: here we need to create the node of function
-            l[ptr] = type - baseType;
-            l[varName] = (int)currentId;
             functionDeclaration();
+            fl++;
         }
         else
         {
+            if (type == VOID)
+            {
+                printf("Line %d: variable cannot have void type\n", line);
+                exit(-1);
+            }
             currentId[Class] = Glo; // global variable
             // currentId[Value] = (int)data; // assign memory
             // data = data + sizeof(int);
-            l[ptr] = type - baseType;
-            l[varName] = (int)currentId;
+
+            memcpy(vl->id, (char *)currentId[Name], currentId[Len]);
+            vl->t = type;
+            vl++;
         }
-        l = l + GloDecNodeSize;
         if (token == ',')
             match(',');
     }
@@ -587,8 +284,9 @@ static void globalDeclaration()
 void syntaxAnalysis()
 {
     initSymbolTab();
+    curNode = ast;
+
     nextToken();
     while (token > 0)
         globalDeclaration();
-    display();
 }

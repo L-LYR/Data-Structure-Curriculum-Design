@@ -1,3 +1,5 @@
+#ifndef ENUMVAR_H
+#define ENUMVAR_H
 // TODO: need to be supported: double float long long short array
 
 enum word
@@ -75,12 +77,12 @@ enum identifier
 };
 
 // types of variable/function
-enum var_fun_type
+enum var_type
 {
-    CHAR = 1,
+    VOID,
+    CHAR,
     INT,
-    BASE = 3,
-    PTR = 2
+    PTR,
 };
 
 // type of declaration.
@@ -90,45 +92,4 @@ enum dec
     Local
 };
 
-enum ast_node_type
-{
-    EnumDec = 512,
-    GloDec,
-    // TODO: statements
-    FunDef,
-
-    LocDec,
-
-    statement,
-    UnaryExpr,
-    BinaryExpr,
-    FunCall,
-    CondExpr,
-    UnitExpr, // only for single Variable, String, Num, Empty.
-};
-
-// fields of AST node
-enum ast_node
-{
-    nodetype,
-    nodename,
-    nodelist,
-    base,
-    body = 3,
-    nodesize,
-};
-
-enum glo_dec_list
-{
-    varName,
-    ptr,
-    paralist,
-    GloDecNodeSize,
-};
-
-enum para_list
-{
-    paraName,
-    paraType,
-    ParaNodeSize,
-};
+#endif

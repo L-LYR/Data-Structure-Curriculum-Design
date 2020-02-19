@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "ast.h"
 
 extern int *symbols; // tokenizer.c
-extern char *src;
-extern char *oldSrc;
-extern char *data;
-extern int *ast;
+extern char *src, *oldSrc, *data;
+
+extern Node *ast; // ast.c
 
 int poolSize,   // size of memory pool
     line;       // current line in source code
@@ -31,12 +31,12 @@ void allocMemoryPool()
     }
     memset(data, 0, poolSize);
 
-    if (!(ast = malloc(poolSize)))
+    if (!(ast = malloc(poolSize * sizeof(Node))))
     {
-        printf("Could not allocate %d memory for creating AST!\n", poolSize);
+        printf("Could not allocate %d memory for data area!\n", poolSize);
         exit(-1);
     }
-    memset(ast, 0, poolSize);
+    memset(ast, 0, sizeof(poolSize * sizeof(Node)));
 }
 // create source file stream
 void readFromFile()

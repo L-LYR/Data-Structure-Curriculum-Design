@@ -1,4 +1,4 @@
-objects = main.o memoryPool.o tokenizer.o lexer.o parser.o ast.o
+objects = main.o memoryPool.o tokenizer.o lexer.o parser.o ast.o display.o
 
 main: $(objects)
 	cc -m32 -o main $(objects)
@@ -20,6 +20,9 @@ parser.o: parser.c
 
 ast.o: ast.c
 	cc -m32 -c ast.c
+
+display.o: display.c
+	cc -m32 -c display.c
 
 clean: 
 	-rm main $(objects)
