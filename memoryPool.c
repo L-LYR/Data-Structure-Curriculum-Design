@@ -8,13 +8,16 @@ extern char *src, *oldSrc, *data;
 
 extern Node *ast; // ast.c
 
-int poolSize,   // size of memory pool
-    line;       // current line in source code
+int poolSize, // size of memory pool
+    line,     // current line in source code
+    nodeNum;
 char *filename; // source file name
 // initialize memory pool
 void allocMemoryPool()
 {
-    poolSize = 256 * 1024;
+    // fixed-size memory allocation
+    poolSize = 102400;
+    nodeNum = 5120;
     line = 1;
 
     if (!(symbols = malloc(poolSize)))
@@ -31,12 +34,12 @@ void allocMemoryPool()
     }
     memset(data, 0, poolSize);
 
-    if (!(ast = malloc(poolSize * sizeof(Node))))
+    if (!(ast = malloc(nodeNum * sizeof(Node))))
     {
-        printf("Could not allocate %d memory for data area!\n", poolSize);
+        printf("Could not allocate %d memory for AST data area!\n", nodeNum * sizeof(Node));
         exit(-1);
     }
-    memset(ast, 0, sizeof(poolSize * sizeof(Node)));
+    memset(ast, 0, sizeof(nodeNum * sizeof(Node)));
 }
 // create source file stream
 void readFromFile()

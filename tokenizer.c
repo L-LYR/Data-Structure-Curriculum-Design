@@ -107,14 +107,9 @@ void getString()
     ++src;
     // if it is a single character, return Num token
     if (token == '"')
-    {
         tokenVal = (int)lastPos;
-    }
     else
-    {
         token = Num;
-    }
-
     return;
 }
 // This function will get operators from src.
@@ -132,26 +127,6 @@ void getOperator()
         }
         else
             token = Assign;
-    }
-    else if (token == '+') // + and ++
-    {
-        if (*src == '+')
-        {
-            src++;
-            token = Inc;
-        }
-        else
-            token = Add;
-    }
-    else if (token == '-') // - and --
-    {
-        if (*src == '-')
-        {
-            src++;
-            token = Dec;
-        }
-        else
-            token = Sub;
     }
     else if (token == '!') // ! and !=
     {
@@ -243,17 +218,55 @@ int nextToken()
         else if (token == '#') // macro, no suported
         {
             while (*src != 0 && *src != '\n')
-            {
                 src++;
-            }
         }
         else if ((token >= 'a' && token <= 'z') ||
                  (token >= 'A' && token <= 'Z') ||
                  (token == '_')) // identifier
         {
             getIdentifier();
-
             return token == Id ? ID : KEY;
+        }
+        else if (token == '-') // special for - -- -<num>
+        {
+            if (*src == '-')
+            {
+                src++;
+                token = Dec;
+                return OP;
+            }
+            else if (*src >= '0' && *src <= '9')
+            {
+                token = *src++;
+                getInt();
+                tokenVal = tokenVal * -1;
+                return CONST;
+            }
+            else
+            {
+                token = Sub;
+                return OP;
+            }
+        }
+        else if (token == '+') // special for + ++ +<num>
+        {
+            if (*src == '+')
+            {
+                src++;
+                token = Inc;
+                return OP;
+            }
+            else if (*src >= '0' && *src <= '9')
+            {
+                token = *src++;
+                getInt();
+                return CONST;
+            }
+            else
+            {
+                token = Add;
+                return OP;
+            }
         }
         else if (token >= '0' && token <= '9') // integer
         {
@@ -266,9 +279,7 @@ int nextToken()
             {
                 // skip one-line comment
                 while (*src != 0 && *src != '\n')
-                {
                     ++src;
-                }
             }
             else
             {
@@ -297,9 +308,7 @@ int nextToken()
 void match(int tk)
 {
     if (token == tk)
-    {
         nextToken();
-    }
     else
     {
         if (tk > 256)

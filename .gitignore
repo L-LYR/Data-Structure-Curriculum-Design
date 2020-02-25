@@ -3,3 +3,5 @@
 main
 input*
 output*
+LexicalAnalysis
+SyntaxAnalysis

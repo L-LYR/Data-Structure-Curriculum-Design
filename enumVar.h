@@ -22,17 +22,18 @@ enum class_token
     Loc,
     Id,
     // token
+    Void,
+    Int,
     Char,
     Else,
     Enum,
     If,
-    Int,
     Return,
     Sizeof,
     While,
+    For,
     Break,
     Continue,
-    Void,
     Assign,
     Cond,
     Lor,
@@ -68,11 +69,10 @@ enum identifier
     Type,  // variable type, INT CHAR or +PTR
     Class, // constant class Num Glo Loc Fun
     Value, // value of variable
-    BType, // B_____ is for global variable
+    BType, // B____ is for global variable
     BClass,
     BValue,
-    Len,    // length of Name, easy for display
-    status, // whether function has been defined
+    Len, // length of Name, easy for display
     IdSize
 };
 
@@ -80,16 +80,9 @@ enum identifier
 enum var_type
 {
     VOID,
-    CHAR,
     INT,
+    CHAR,
     PTR,
-};
-
-// type of declaration.
-enum dec
-{
-    Global,
-    Local
 };
 
 #endif

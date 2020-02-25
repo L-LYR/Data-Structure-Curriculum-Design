@@ -8,7 +8,7 @@ extern int *currentId, *symbols, token, tokenVal;
 extern int nextToken();
 
 char *map[] = {
-    "char", "else", "enum", "if", "int", "return", "sizeof", "while", "Break", "Continue", "void",
+    "void", "int", "char", "else", "enum", "if", "return", "sizeof", "while", "for", "Break", "Continue",
     "=", "?", "|", "&", "||", "^", "&&", "==", "!=", "<", ">", "<=",
     ">=", "<<", ">>", "+", "-", "*", "/", "%%", "++", "--", "["};
 
@@ -20,9 +20,9 @@ void initSymbolTab()
     line = 1;
     memset(symbols, 0, poolSize);
 
-    src = "char else enum if int return sizeof while break continue void";
-    i = Char;
-    while (i <= Void)
+    src = "void int char else enum if return sizeof while for break continue";
+    i = Void;
+    while (i <= Continue)
     {
         nextToken();
         currentId[Token] = i++;
@@ -43,7 +43,7 @@ void lexicalAnalysis()
 
         if (ret == OP)
         {
-            i = token - Char;
+            i = token - Void;
             if (i >= 0)
                 printf("Line %d: %s ---- <operator>\n\n", line, map[i]);
             else if (token == '!' || token == ']' || token == '~')
@@ -71,7 +71,7 @@ void lexicalAnalysis()
         }
         else if (ret == KEY)
         {
-            i = token - Char;
+            i = token - Void;
             printf("Line %d: %s ---- <keyword>\n\n", line, map[i]);
         }
     }
