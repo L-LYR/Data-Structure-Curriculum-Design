@@ -25,11 +25,19 @@ int main(void)
     fp = freopen("SyntaxAnalysis", "w", stdout);
     if (fp == NULL)
     {
-        printf("Cannot open the File LexicalAnalysis\n");
+        printf("Cannot open the File SyntaxAnalysis\n");
         exit(-1);
     }
     syntaxAnalysis();
     displayAST();
+    fclose(fp);
+    fp = freopen("output.c", "w", stdout);
+    if (fp == NULL)
+    {
+        printf("Cannot open the File LexicalAnalysis\n");
+        exit(-1);
+    }
+    rearrange();
     fclose(fp);
 
     return 0;

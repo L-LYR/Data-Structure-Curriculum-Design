@@ -7,7 +7,7 @@ extern Node *ast;
 extern char *map[]; // lexer.c
 int ind;
 
-static void indent()
+void indent()
 {
     int i;
     i = 0;
@@ -42,14 +42,16 @@ static void displayEnumDecNode(EnumDecNode *p)
     ind -= 8;
 }
 
-static void displayType(int t)
+void displayStar(int i)
 {
-    int i;
-    i = t / PTR;
-    t = t % PTR;
-    printf("%s", map[t]);
     while (i-- > 0)
         putchar('*');
+}
+
+void displayType(int t)
+{
+    printf("%s ", map[t % PTR]);
+    displayStar(t / PTR);
 }
 
 static void displayVarList(Var *p)
@@ -234,42 +236,24 @@ static void displayTernaryOp(TernaryOpNode *p)
 }
 static void displayExpr(ExprNode *p)
 {
+    indent();
     if (p->t == ConstVal)
-    {
-        indent();
         printf("Constant Expression: %d\n", (int)(p->n));
-    }
     else if (p->t == ConstStr)
-    {
-        indent();
         printf("Constant Expression: \"%s\"\n", (char *)(p->n));
-    }
     else if (p->t == FunCall)
     {
-        indent();
         printf("Function Call:\n");
         displayFunCall(p->n);
     }
     else if (p->t == Variable)
-    {
-        indent();
         displayVarExpr(p->n);
-    }
     else if (p->t == PreUnary || p->t == Postfix)
-    {
-        indent();
         displayUnaryOp(p->n, p->t);
-    }
     else if (p->t == Binary || p->t == Bracket)
-    {
-        indent();
         displayBinaryOp(p->n, p->t);
-    }
     else if (p->t == Ternary)
-    {
-        indent();
         displayTernaryOp(p->n);
-    }
 }
 
 static void displayStatement(StateNode *p);
@@ -352,13 +336,9 @@ static void displayStatement(StateNode *p)
     else if (p->t == BLOCK)
         displayBlockStm(p->n);
     else if (p->t == BREAK)
-    {
         printf("Jump Statement: break\n");
-    }
     else if (p->t == CONTINUE)
-    {
         printf("Jump Statement: continue\n");
-    }
     else if (p->t == RETURN)
     {
         printf("Jump Statement: Return\n");
@@ -374,9 +354,7 @@ static void displayStatement(StateNode *p)
         ind -= 4;
     }
     else if (p->t == EMPTY)
-    {
         printf("Empty Statement: (null)\n");
-    }
 }
 
 static void displayFuncBody(Node *fb)

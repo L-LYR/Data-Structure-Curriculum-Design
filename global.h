@@ -13,4 +13,6 @@ void syntaxAnalysis();
 
 void displayAST();
 
+void rearrange();
+
 #endif
