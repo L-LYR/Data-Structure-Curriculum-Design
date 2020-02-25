@@ -188,6 +188,26 @@ void getOperator()
         else
             token = And;
     }
+    else if (token == '+') // special for + ++ +<num>
+    {
+        if (*src == '+')
+        {
+            src++;
+            token = Inc;
+        }
+        else
+            token = Add;
+    }
+    else if (token == '-') // special for - -- -<num>
+    {
+        if (*src == '-')
+        {
+            src++;
+            token = Dec;
+        }
+        else
+            token = Sub;
+    }
     else if (token == '^')
         token = Xor;
     else if (token == '%')
@@ -226,47 +246,6 @@ int nextToken()
         {
             getIdentifier();
             return token == Id ? ID : KEY;
-        }
-        else if (token == '-') // special for - -- -<num>
-        {
-            if (*src == '-')
-            {
-                src++;
-                token = Dec;
-                return OP;
-            }
-            else if (*src >= '0' && *src <= '9')
-            {
-                token = *src++;
-                getInt();
-                tokenVal = tokenVal * -1;
-                return CONST;
-            }
-            else
-            {
-                token = Sub;
-                return OP;
-            }
-        }
-        else if (token == '+') // special for + ++ +<num>
-        {
-            if (*src == '+')
-            {
-                src++;
-                token = Inc;
-                return OP;
-            }
-            else if (*src >= '0' && *src <= '9')
-            {
-                token = *src++;
-                getInt();
-                return CONST;
-            }
-            else
-            {
-                token = Add;
-                return OP;
-            }
         }
         else if (token >= '0' && token <= '9') // integer
         {

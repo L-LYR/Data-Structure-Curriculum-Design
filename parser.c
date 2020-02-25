@@ -62,11 +62,19 @@ static void enumDeclaration()
         if (token == Assign) // ENUM_VAR = 100
         {
             nextToken();
+            if (token == Sub)
+            {
+                nextToken();
+                tokenVal = -tokenVal;
+            }
+            else if (token == Add)
+                nextToken();
             if (token != Num)
             {
                 printf("Line %d: bad enum initializer\n", line);
                 exit(-1);
             }
+
             i = tokenVal;
             nextToken();
         }
@@ -369,6 +377,24 @@ static void preUnaryOpExpr(ExprNode *p)
         p->n = makeNode(PreUnary);
         ((UnaryOpNode *)(p->n))->op[0] = '~';
         match('~');
+        ((UnaryOpNode *)(p->n))->o = expression(Inc);
+        exprType = INT;
+    }
+    else if (token == Add)
+    {
+        p->t = PreUnary;
+        p->n = makeNode(PreUnary);
+        ((UnaryOpNode *)(p->n))->op[0] = '+';
+        match(Add);
+        ((UnaryOpNode *)(p->n))->o = expression(Inc);
+        exprType = INT;
+    }
+    else if (token == Sub)
+    {
+        p->t = PreUnary;
+        p->n = makeNode(PreUnary);
+        ((UnaryOpNode *)(p->n))->op[0] = '-';
+        match(Sub);
         ((UnaryOpNode *)(p->n))->o = expression(Inc);
         exprType = INT;
     }
