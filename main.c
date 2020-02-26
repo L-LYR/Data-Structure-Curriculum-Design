@@ -1,19 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "global.h"
+#include <string.h>
 // int main(int argc, char **argv)
-extern char *filename;
-extern int token;
+extern char filename[64];
 
 int main(void)
 {
     FILE *fp;
 
-    filename = "input.c";
+    sprintf(filename, "%s", "input.c");
     allocMemoryPool();
     readFromFile();
 
-    fp = freopen("LexicalAnalysis", "w", stdout);
+    fp = freopen(strcat(filename, ".lex"), "w", stdout);
     if (fp == NULL)
     {
         printf("Cannot open the File LexicalAnalysis\n");
@@ -22,7 +22,8 @@ int main(void)
     lexicalAnalysis();
     fclose(fp);
 
-    fp = freopen("SyntaxAnalysis", "w", stdout);
+    sprintf(filename, "%s", "input.c");
+    fp = freopen(strcat(filename, ".ast"), "w", stdout);
     if (fp == NULL)
     {
         printf("Cannot open the File SyntaxAnalysis\n");
@@ -39,6 +40,8 @@ int main(void)
     }
     rearrange();
     fclose(fp);
+
+    freeAll();
 
     return 0;
 }

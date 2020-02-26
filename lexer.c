@@ -4,7 +4,7 @@
 
 extern int line, poolSize;           // memoryPool.c
 extern char *src, *oldSrc, *lastPos; // tokenizer.c
-extern int *currentId, *symbols, token, tokenVal;
+extern long long *currentId, *symbols, token, tokenVal;
 extern int nextToken();
 
 char *map[] = {

@@ -15,4 +15,6 @@ void displayAST();
 
 void rearrange();
 
+void freeAll();
+
 #endif

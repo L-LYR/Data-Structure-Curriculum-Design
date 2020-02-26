@@ -7,7 +7,7 @@
 extern int line, poolSize; // memoryPool.c
 
 extern char *src, *data; // tokenizer.c
-extern int *currentId, *symbols, token, tokenVal;
+extern long long *currentId, *symbols, token, tokenVal;
 extern void match(int tk);
 extern int nextToken();
 
@@ -157,7 +157,7 @@ static ExprNode *expression(int level);
 static void functionCall(FunCallNode *p)
 {
     int i;
-    int *fn;
+    long long *fn;
     i = 0;
     fn = currentId;
     memcpy(p->n, (char *)currentId[Name], currentId[Len]);
@@ -703,7 +703,10 @@ static ExprNode *expression(int level)
     q = makeNode(EXPR);
     last = binaryOpExpr(level, q);
     if (q->t == 0)
+    {
+        free(q);
         return p;
+    }
     else
     {
         if (q->t == Binary || q->t == Bracket)
@@ -913,7 +916,7 @@ static void globalDeclaration()
     int baseType;
     int type;
     int i;
-    int *tmp;
+    long long *tmp;
 
     if (token == Enum)
     {
@@ -1029,7 +1032,7 @@ void syntaxAnalysis()
     initSymbolTab();
     curNode = ast;
 
-    nextToken();
+    match(token);
     while (token > 0)
         globalDeclaration();
 }

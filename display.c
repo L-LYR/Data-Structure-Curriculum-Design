@@ -238,7 +238,7 @@ static void displayExpr(ExprNode *p)
 {
     indent();
     if (p->t == ConstVal)
-        printf("Constant Expression: %d\n", (int)(p->n));
+        printf("Constant Expression: %lld\n", (long long)(p->n));
     else if (p->t == ConstStr)
         printf("Constant Expression: \"%s\"\n", (char *)(p->n));
     else if (p->t == FunCall)
@@ -341,9 +341,15 @@ static void displayStatement(StateNode *p)
         printf("Jump Statement: continue\n");
     else if (p->t == RETURN)
     {
-        printf("Jump Statement: Return\n");
+        printf("Jump Statement: return\n");
         ind += 4;
-        displayExpr(p->n);
+        if (p->n != NULL)
+            displayExpr(p->n);
+        else
+        {
+            indent();
+            printf("Empty Statement: (null)\n");
+        }
         ind -= 4;
     }
     else if (p->t == EXPR)
@@ -361,7 +367,7 @@ static void displayFuncBody(Node *fb)
 {
     ind += 4;
     Node *p = fb;
-    while (p)
+    while (p != NULL && p->t != 0)
     {
         if (p->t == LocDec)
             displayLocDecNode(p->n);
@@ -404,7 +410,7 @@ static void displayFuncDef(FuncDefNode *p)
 void displayAST()
 {
     Node *p = ast;
-    while (p)
+    while (p != NULL && p->t != 0)
     {
         printf("Line %d: \n", p->l);
         if (p->t == EnumDec)
@@ -413,7 +419,7 @@ void displayAST()
             displayGloDecNode(p->n);
         else if (p->t == FuncDef)
             displayFuncDef(p->n);
-        p = p->s;
         printf("\n");
+        p = p->s;
     }
 }

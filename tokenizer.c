@@ -6,17 +6,17 @@
 extern int line; // memoryPool.c
 
 // TODO: user can change the size of memory pool
-int *symbols,   // symbol table
-    *currentId, // currentId in symbol table
-    token,      // current token
-    tokenVal;   // value of current token
+long long *symbols, // symbol table
+    *currentId,     // currentId in symbol table
+    token = 0,      // current token
+    tokenVal;       // value of current token
 
-char *src, *oldSrc, // pointer to the source code string
-    *data,          // data segment used to save string
-    *lastPos;       // help to mark the beginning of identifier or string
+char *src, *oldSrc,  // pointer to the source code string
+    *data, *oldData, // data segment used to save string
+    *lastPos;        // help to mark the beginning of identifier or string
 void getIdentifier()
 {
-    int hash;
+    long long hash;
     // parse identifier
     lastPos = src - 1;
     hash = token;
@@ -41,7 +41,7 @@ void getIdentifier()
     }
 
     // store new ID
-    currentId[Name] = (int)lastPos;
+    currentId[Name] = (long long)lastPos;
     currentId[Hash] = hash;
     currentId[Len] = (src - lastPos);
     token = currentId[Token] = Id;
@@ -107,7 +107,7 @@ void getString()
     ++src;
     // if it is a single character, return Num token
     if (token == '"')
-        tokenVal = (int)lastPos;
+        tokenVal = (long long)lastPos;
     else
         token = Num;
     return;
@@ -229,7 +229,7 @@ int nextToken()
 {
     while (token = *src) // loop until EOF
     {
-        ++src;
+        *src++;
         if (token == '\n' || token == ' ' || token == '\r' || token == '\t') // next line
         {
             if (token == '\n')

@@ -184,7 +184,7 @@ static void printTernaryOp(TernaryOpNode *p)
 static void printExpr(ExprNode *p)
 {
     if (p->t == ConstVal)
-        printf("%d", (int)(p->n));
+        printf("%lld", (long long)(p->n));
     else if (p->t == ConstStr)
         printf("\"%s\"", (char *)(p->n));
     else if (p->t == FunCall)
@@ -256,7 +256,8 @@ static void printStatement(StateNode *p)
     else if (p->t == RETURN)
     {
         printf("return ");
-        printExpr(p->n);
+        if (p->n != NULL)
+            printExpr(p->n);
         printf(";\n");
     }
     else if (p->t == EXPR)
@@ -272,7 +273,7 @@ static void printFuncBody(Node *fb)
 {
     ind += 4;
     Node *p = fb;
-    while (p)
+    while (p != NULL && p->t != 0)
     {
         if (p->t == LocDec)
             printLocDec(p->n);
@@ -309,7 +310,7 @@ void rearrange()
 {
     ind = 0;
     Node *p = ast;
-    while (p)
+    while (p != NULL && p->t != 0)
     {
         if (p->t == EnumDec)
             printEnumDec(p->n);

@@ -3,5 +3,6 @@
 main
 input*
 output*
-LexicalAnalysis
-SyntaxAnalysis
+*.lex
+*.ast
+lpc
