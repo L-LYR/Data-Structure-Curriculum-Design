@@ -4,7 +4,7 @@
 #include "enumVar.h"
 #include "ast.h"
 
-extern int line, poolSize; // memoryPool.c
+extern int line; // memoryPool.c
 
 extern char *src, *data; // tokenizer.c
 extern long long *currentId, *symbols, token, tokenVal;
@@ -18,10 +18,7 @@ extern void *makeNode(int t);
 extern void *setNode(int t);
 extern void changeToFuncDef();
 
-void *cn; // current node editor
-Var *vl;  // variable list help pointer
-Func *fl; // function list help pointer
-
+void *cn; // current node
 int exprType; // the type of an expression
 int isLvalue; // mark of lvalue
 int params;   // number of parameters of function
@@ -32,9 +29,9 @@ int params;   // number of parameters of function
 static void enumDeclaration()
 {
     int i;
+    Var *vl;
 
     i = 0;
-
     vl = ((EnumDecNode *)cn)->vl;
 
     while (token != '}')
@@ -45,15 +42,20 @@ static void enumDeclaration()
             exit(-1);
         }
 
-        if (currentId[Class])
+        // redeclaration
+        if (currentId[Class] == Glo)
         {
-            // redeclaration
-            if (currentId[Class] == Glo)
-                printf("Line %d: redeclaration of deferent type\n", line);
-            else if (currentId[Class] == Num)
-                printf("Line %d: redeclaration of enumerator\n", line);
-            else if (currentId[Class] == Fun)
-                printf("Line %d: redeclaration of deferent type\n", line);
+            printf("Line %d: redeclaration of deferent type\n", line);
+            exit(-1);
+        }
+        else if (currentId[Class] == Num)
+        {
+            printf("Line %d: redeclaration of enumerator\n", line);
+            exit(-1);
+        }
+        else if (currentId[Class] == Fun)
+        {
+            printf("Line %d: redeclaration of deferent type\n", line);
             exit(-1);
         }
 
@@ -91,7 +93,7 @@ static void enumDeclaration()
     }
 }
 
-static void functionParameter()
+static void functionParameter(Func *fl)
 {
     int type;
     Var *p = fl->pl;
@@ -193,15 +195,8 @@ static void functionCall(FunCallNode *p)
 static void castOp(UnaryOpNode *p)
 {
     char t;
-    if (token == Int)
-        t = INT;
-    else if (token == Void)
-        t = VOID;
-    else if (token == Char)
-        t = CHAR;
-    else if (token == Float)
-        t = FLOAT;
-
+    if (token == Int || token == Char || token == Void || token == Float)
+        t = VOID + token - Void;
     match(token);
     while (token == Mul)
     {
@@ -294,25 +289,10 @@ static void preUnaryOpExpr(ExprNode *p)
         match(Sizeof);
         match('(');
 
-        if (token == Int)
+        if (token == Int || token == Char || token == Void || token == Float)
         {
-            match(Int);
-            exprType = INT;
-        }
-        else if (token == Char)
-        {
-            match(Char);
-            exprType = CHAR;
-        }
-        else if (token == Void)
-        {
-            match(Void);
-            exprType = VOID;
-        }
-        else if (token == Float)
-        {
-            match(Float);
-            exprType = FLOAT;
+            match(token);
+            exprType = VOID + token - Void;
         }
 
         while (token == Mul)
@@ -708,6 +688,7 @@ static ExprNode *binaryOpExpr(int level, ExprNode *p)
             else if (q->t == Postfix)
                 ((UnaryOpNode *)(q->n))->o = last;
         }
+
         last = q;
         q = NULL;
     }
@@ -717,10 +698,13 @@ static ExprNode *binaryOpExpr(int level, ExprNode *p)
 static ExprNode *expression(int level)
 {
     ExprNode *last, *p, *q;
+
     p = makeNode(EXPR);
     preUnaryOpExpr(p);
+
     q = makeNode(EXPR);
     last = binaryOpExpr(level, q);
+
     if (q->t == 0)
     {
         free(q);
@@ -745,7 +729,6 @@ static void ifStm(IfNode *p)
     match('(');
     p->c = expression(Assign);
     match(')');
-
     statement(&(p->a));
     if (token == Else)
     {
@@ -762,11 +745,9 @@ static void ifStm(IfNode *p)
 static void whileStm(WhileNode *p)
 {
     match(While);
-
     match('(');
     p->c = expression(Assign);
     match(')');
-
     statement(&(p->s));
 }
 
@@ -844,18 +825,15 @@ static void functionBody()
     int baseType;
     int type;
     LocDecNode *ln;
+    StateNode *sn;
+    Var *vl;
+
     while (token != '}')
     {
         if (token == Int || token == Char || token == Void || token == Float)
         {
-            if (token == Int)
-                baseType = INT;
-            else if (token == Char)
-                baseType = CHAR;
-            else if (token == Void)
-                baseType = VOID;
-            else if (token == Float)
-                baseType = FLOAT;
+            if (token == Int || token == Char || token == Void || token == Float)
+                baseType = VOID + token - Void;
 
             match(token);
 
@@ -877,18 +855,15 @@ static void functionBody()
                     exit(-1);
                 }
 
-                if (currentId[Class])
+                if (currentId[Class] == Num)
                 {
-                    if (currentId[Class] == Num)
-                    {
-                        printf("Line %d: redeclaration of different type\n", line);
-                        exit(-1);
-                    }
-                    if (currentId[Class] == Loc)
-                    {
-                        printf("Line %d: redeclaration of local variable\n", line);
-                        exit(-1);
-                    }
+                    printf("Line %d: redeclaration of different type\n", line);
+                    exit(-1);
+                }
+                else if (currentId[Class] == Loc)
+                {
+                    printf("Line %d: redeclaration of local variable\n", line);
+                    exit(-1);
                 }
 
                 match(Id);
@@ -912,8 +887,8 @@ static void functionBody()
         }
         else
         {
-            cn = setNode(Statement);
-            statement(cn);
+            sn = setNode(Statement);
+            statement(sn);
         }
     }
 
@@ -938,6 +913,8 @@ static void globalDeclaration()
     int type;
     int i;
     long long *tmp;
+    Var *vl;
+    Func *fl;
 
     if (token == Enum)
     {
@@ -962,14 +939,8 @@ static void globalDeclaration()
 
     // parse type name
     // Example: int | char [*]
-    if (token == Int)
-        baseType = INT;
-    else if (token == Char)
-        baseType = CHAR;
-    else if (token == Void)
-        baseType = VOID;
-    else if (token == Float)
-        baseType = FLOAT;
+    if (token == Int || token == Char || token == Void || token == Float)
+        baseType = VOID + token - Void;
     match(token);
 
     cn = setNode(GloDec);
@@ -1017,7 +988,7 @@ static void globalDeclaration()
 
             // currentId[Value] = (int)(text + 1); // memory address of function or entry
             match('(');
-            functionParameter();
+            functionParameter(fl);
             tmp[Value] = params;
             match(')');
 
@@ -1054,7 +1025,6 @@ void syntaxAnalysis()
 {
     initSymbolTab();
     curNode = ast;
-
     match(token);
     while (token > 0)
         globalDeclaration();

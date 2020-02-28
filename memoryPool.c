@@ -7,7 +7,7 @@ extern long long *symbols; // tokenizer.c
 extern char *src, *oldSrc, *data, *oldData;
 
 extern Node *ast; // ast.c
-
+// the size of symbol table will be three times than the size of data segment.
 int poolSize, // size of memory pool
     line,     // current line in source code
     nodeNum;
@@ -16,16 +16,14 @@ char filename[64]; // source file name
 void allocMemoryPool()
 {
     // fixed-size memory allocation
-    poolSize = 102400;
-    nodeNum = 10240;
     line = 1;
 
-    if (!(symbols = malloc(poolSize)))
+    if (!(symbols = malloc(poolSize << 2)))
     {
         printf("Could not allocate %d memory for symbol table!\n", poolSize);
         exit(-1);
     }
-    memset(symbols, 0, poolSize);
+    memset(symbols, 0, poolSize << 2);
 
     if (!(oldData = data = malloc(poolSize)))
     {
@@ -51,15 +49,20 @@ void readFromFile()
         printf("Could not open file at %s!\n", filename);
         exit(-1);
     }
+
+    fseek(fp, 0L, SEEK_END);
+    int fileSize = ftell(fp);
+    rewind(fp);
+
+    poolSize = fileSize << 1;
+    nodeNum = (poolSize >> 3) + 10;
+
     if (!(src = oldSrc = malloc(poolSize)))
     {
         printf("Could not allocate %d memory for source code!\n", poolSize);
         exit(-1);
     }
 
-    fseek(fp, 0L, SEEK_END);
-    int fileSize = ftell(fp);
-    rewind(fp);
     if ((ret = fread(src, 1, fileSize, fp)) < fileSize)
     {
         printf("File read error! Return %d and expect %d.\n", ret, fileSize);

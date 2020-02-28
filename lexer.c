@@ -6,9 +6,11 @@ extern int line, poolSize;           // memoryPool.c
 extern char *src, *oldSrc, *lastPos; // tokenizer.c
 extern long long *currentId, *symbols, token, tokenVal;
 extern int nextToken();
+// help to print
 
 char *map[] = {
-    "void", "int", "float", "char", "else", "enum", "if", "return", "sizeof", "while", "for", "Break", "Continue",
+    "void", "int", "float", "char", "else", "enum", "if", "return",
+    "sizeof", "while", "for", "Break", "Continue",
     "=", "?", "|", "&", "||", "^", "&&", "==", "!=", "<", ">", "<=",
     ">=", "<<", ">>", "+", "-", "*", "/", "%%", "++", "--", "["};
 
@@ -18,7 +20,7 @@ void initSymbolTab()
     int i;
 
     line = 1;
-    memset(symbols, 0, poolSize);
+    memset(symbols, 0, poolSize << 2);
 
     src = "void int float char else enum if return sizeof while for break continue";
     i = Void;
@@ -50,9 +52,7 @@ void lexicalAnalysis()
                 printf("Line %d: %c ---- <operator>\n", line, token);
         }
         else if (ret == DELIM)
-        {
             printf("Line %d: %c ---- <delimiter>\n", line, token);
-        }
         else if (ret == CONST_STR)
             printf("Line %d: \"%s\" ---- <constant>\n", line, (char *)tokenVal);
         else if (ret == CONST_INT)

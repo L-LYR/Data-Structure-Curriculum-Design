@@ -4,11 +4,9 @@
 #include "ast.h"
 #include "enumVar.h"
 
-extern char *map[]; // lexer.c
-extern Node *ast;   // ast.c
-extern void indent(),
-    displayStar(int i),
-    displayType(int t); //display.c
+extern char *map[];                                           // lexer.c
+extern Node *ast;                                             // ast.c
+extern void indent(), displayStar(int i), displayType(int t); //display.c
 extern int ind;
 
 int flag;
@@ -111,7 +109,6 @@ static void printLocDec(LocDecNode *p)
             else
                 putchar(',');
             putchar(' ');
-
             displayStar(q->t / PTR);
             printf("%s", q->id);
             q++;

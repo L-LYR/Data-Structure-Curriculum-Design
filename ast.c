@@ -60,14 +60,14 @@ void *setNode(int t)
 
     if (lastNode != NULL)
     {
-        if (lastNode->t == FuncDef)
+        if (lastNode->t == FuncDef) // connect statement node with local declaration node in function body
             ((FuncDefNode *)(lastNode->n))->fb = curNode;
-        else if (funcMark != NULL && (t == EnumDec || t == GloDec))
+        else if (funcMark != NULL && (t == EnumDec || t == GloDec)) // connect function definition node with other global declaration node
         {
             funcMark->s = curNode;
             funcMark = NULL;
         }
-        else
+        else // connect global declaration nodes
             lastNode->s = curNode;
     }
 

@@ -13,7 +13,8 @@ long long *symbols, // symbol table
 char *src, *oldSrc,  // pointer to the source code string
     *data, *oldData, // data segment used to save string
     *lastPos;        // help to mark the beginning of identifier or string
-void getIdentifier()
+
+static void getIdentifier()
 {
     long long hash;
     // parse identifier
@@ -55,7 +56,7 @@ static void swap(char *l, char *r)
     *l = t;
 }
 
-void getInt()
+static void getInt()
 {
     // parse number, three kinds: dec(123) hex(0x123) oct(017)
     int i, j;
@@ -132,7 +133,7 @@ void getInt()
 // NOTICE:
 //      1. This function not only parse a string but also parse a single charactor
 //      2. If it is a single charactor, we will give it the Num class.
-void getString()
+static void getString()
 {
     lastPos = data;
     while (*src != 0 && *src != token)
@@ -154,7 +155,7 @@ void getString()
 // I try my best to shorten it which still have about 100 lines,
 // but I think it is not so hard to understand it
 // because of its simple logic.
-void getOperator()
+static void getOperator()
 {
     if (token == '=') // == and =
     {
@@ -173,8 +174,6 @@ void getOperator()
             src++;
             token = Ne;
         }
-        // else
-        //     token = Not;
     }
     else if (token == '<') // <= << and <
     {
@@ -317,9 +316,7 @@ int nextToken()
                 return CONST_STR;
         }
         else if (token == ';' || token == '{' || token == '}' || token == '(' || token == ')' || token == ',' || token == ':')
-        {
             return DELIM;
-        }
         else // operator and delimiter
         {
             getOperator();
@@ -328,6 +325,7 @@ int nextToken()
     }
     return 0;
 }
+
 void match(int tk)
 {
     if (token == tk)

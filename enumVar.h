@@ -60,7 +60,6 @@ enum class_token
     Inc,
     Dec,
     Brak,
-
 };
 
 // fields of identifier

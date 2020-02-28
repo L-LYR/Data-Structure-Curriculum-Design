@@ -12,13 +12,13 @@ enum NodeType
     LocDec,
     Statement,
 };
-
+// int float char void + ptr
 typedef struct Var
 {
     char id[nameLen];
     int t; // type or value
 } Var;
-
+// function
 typedef struct Func
 {
     char id[nameLen];
@@ -66,12 +66,13 @@ enum ExprType
     ConstFlo,
     ConstStr,
 };
+// switch node
 typedef struct ExprNode
 {
     int t;   // type
     void *n; // node
 } ExprNode;
-// specific expression node
+// primary expression node
 // <id>
 typedef struct VarNode
 {
@@ -125,25 +126,31 @@ typedef struct StateNode
     void *n; // node
     int l;   // line
 } StateNode;
-// specific statement node
+// if statement node
+// <if> <(> <condition expression> <)>
+//     [{] <statement> [}]
+// [<else> [{] <statement> [}]]
 typedef struct IfNode
 {
     struct ExprNode *c; // condition
     struct StateNode a;
     struct StateNode b;
 } IfNode;
-
+// while statement node
+// <while> <(> <condition expression> <)>
+//     [{] <statement> [}]
 typedef struct WhileNode
 {
     struct ExprNode *c;
     struct StateNode s;
 } WhileNode;
-
+// block statement node
+//  <{> <statement> <}>
 typedef struct BlockNode
 {
     struct StateNode sl[listLen];
 } BlockNode;
-
+// common node
 typedef struct Node
 {
     int t;          // type
@@ -151,5 +158,4 @@ typedef struct Node
     struct Node *s; // successor
     int l;          // line
 } Node;
-
 #endif
