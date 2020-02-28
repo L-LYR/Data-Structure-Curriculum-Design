@@ -8,7 +8,7 @@ extern long long *currentId, *symbols, token, tokenVal;
 extern int nextToken();
 
 char *map[] = {
-    "void", "int", "char", "else", "enum", "if", "return", "sizeof", "while", "for", "Break", "Continue",
+    "void", "int", "float", "char", "else", "enum", "if", "return", "sizeof", "while", "for", "Break", "Continue",
     "=", "?", "|", "&", "||", "^", "&&", "==", "!=", "<", ">", "<=",
     ">=", "<<", ">>", "+", "-", "*", "/", "%%", "++", "--", "["};
 
@@ -20,7 +20,7 @@ void initSymbolTab()
     line = 1;
     memset(symbols, 0, poolSize);
 
-    src = "void int char else enum if return sizeof while for break continue";
+    src = "void int float char else enum if return sizeof while for break continue";
     i = Void;
     while (i <= Continue)
     {
@@ -53,16 +53,12 @@ void lexicalAnalysis()
         {
             printf("Line %d: %c ---- <delimiter>\n", line, token);
         }
-        else if (ret == CONST)
-        {
-            if (token == '"')
-            {
-                p = (char *)tokenVal;
-                printf("Line %d: \"%s\" ---- <constant>\n", line, p);
-            }
-            else
-                printf("Line %d: (int)%d ---- <constant>\n", line, tokenVal);
-        }
+        else if (ret == CONST_STR)
+            printf("Line %d: \"%s\" ---- <constant>\n", line, (char *)tokenVal);
+        else if (ret == CONST_INT)
+            printf("Line %d: (int)%d ---- <constant>\n", line, tokenVal);
+        else if (ret == CONST_FLO)
+            printf("Line %d: (float)%s ---- <constant>\n", line, (char *)tokenVal);
         else if (ret == ID)
         {
             p = (char *)currentId[Name];

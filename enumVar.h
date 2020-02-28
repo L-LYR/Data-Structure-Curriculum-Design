@@ -1,12 +1,13 @@
 #ifndef ENUMVAR_H
 #define ENUMVAR_H
-// TODO: need to be supported: double float long long short array
 
 enum word
 {
     ID = 1,
     KEY,
-    CONST,
+    CONST_INT,
+    CONST_FLO,
+    CONST_STR,
     OP,
     DELIM,
 };
@@ -17,6 +18,7 @@ enum class_token
 {
     // class
     Num = 256,
+    Flo,
     Fun,
     Glo,
     Loc,
@@ -24,6 +26,7 @@ enum class_token
     // token
     Void,
     Int,
+    Float,
     Char,
     Else,
     Enum,
@@ -81,6 +84,7 @@ enum var_type
 {
     VOID,
     INT,
+    FLOAT,
     CHAR,
     PTR,
 };

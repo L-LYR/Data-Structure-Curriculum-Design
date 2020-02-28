@@ -183,8 +183,10 @@ static void printTernaryOp(TernaryOpNode *p)
 
 static void printExpr(ExprNode *p)
 {
-    if (p->t == ConstVal)
+    if (p->t == ConstInt)
         printf("%lld", (long long)(p->n));
+    else if (p->t == ConstFlo)
+        printf("%s", (char *)(p->n));
     else if (p->t == ConstStr)
         printf("\"%s\"", (char *)(p->n));
     else if (p->t == FunCall)

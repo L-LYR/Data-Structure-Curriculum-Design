@@ -98,9 +98,11 @@ static void functionParameter()
     params = 0;
     while (token != ')')
     {
-        if (token == Int) // int type
+        if (token == Int) // int
             type = INT;
-        else if (token == Char) // char type
+        else if (token == Float) // float
+            type = FLOAT;
+        else if (token == Char) // char
             type = CHAR;
         else if (token == Void)
         {
@@ -108,9 +110,10 @@ static void functionParameter()
             nextToken();
             return;
         }
+
         match(token);
 
-        while (token == Mul) // pointer type
+        while (token == Mul) // pointer
         {
             match(Mul);
             type = type + PTR;
@@ -196,6 +199,9 @@ static void castOp(UnaryOpNode *p)
         t = VOID;
     else if (token == Char)
         t = CHAR;
+    else if (token == Float)
+        t = FLOAT;
+
     match(token);
     while (token == Mul)
     {
@@ -216,10 +222,18 @@ static void preUnaryOpExpr(ExprNode *p)
 
     if (token == Num)
     {
-        p->t = ConstVal;
+        p->t = ConstInt;
         p->n = (void *)tokenVal;
         match(Num);
         exprType = INT;
+        isLvalue = 0;
+    }
+    else if (token == Flo)
+    {
+        p->t = ConstFlo;
+        p->n = (void *)tokenVal;
+        match(Flo);
+        exprType = FLOAT;
         isLvalue = 0;
     }
     else if (token == '"')
@@ -276,7 +290,7 @@ static void preUnaryOpExpr(ExprNode *p)
     }
     else if (token == Sizeof)
     {
-        p->t = ConstVal;
+        p->t = ConstInt;
         match(Sizeof);
         match('(');
 
@@ -295,6 +309,11 @@ static void preUnaryOpExpr(ExprNode *p)
             match(Void);
             exprType = VOID;
         }
+        else if (token == Float)
+        {
+            match(Float);
+            exprType = FLOAT;
+        }
 
         while (token == Mul)
         {
@@ -311,7 +330,7 @@ static void preUnaryOpExpr(ExprNode *p)
     else if (token == '(')
     {
         match('(');
-        if (token == Int || token == Char || token == Void)
+        if (token == Int || token == Char || token == Void || token == Float)
         {
             p->t = PreUnary;
             p->n = makeNode(PreUnary);
@@ -827,14 +846,16 @@ static void functionBody()
     LocDecNode *ln;
     while (token != '}')
     {
-        if (token == Int || token == Char || token == Void)
+        if (token == Int || token == Char || token == Void || token == Float)
         {
             if (token == Int)
                 baseType = INT;
-            else if (token == Void)
-                baseType = VOID;
             else if (token == Char)
                 baseType = CHAR;
+            else if (token == Void)
+                baseType = VOID;
+            else if (token == Float)
+                baseType = FLOAT;
 
             match(token);
 
@@ -947,6 +968,8 @@ static void globalDeclaration()
         baseType = CHAR;
     else if (token == Void)
         baseType = VOID;
+    else if (token == Float)
+        baseType = FLOAT;
     match(token);
 
     cn = setNode(GloDec);

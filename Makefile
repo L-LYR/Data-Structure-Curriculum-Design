@@ -7,4 +7,4 @@ main: $(objects)
 	cc -o lpc $(objects)
 
 clean: 
-	-rm lpc *.o
+	-rm lpc

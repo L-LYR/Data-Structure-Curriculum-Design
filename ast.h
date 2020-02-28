@@ -62,7 +62,8 @@ enum ExprType
     Ternary, // ? :
     FunCall,
     Variable,
-    ConstVal,
+    ConstInt,
+    ConstFlo,
     ConstStr,
 };
 typedef struct ExprNode

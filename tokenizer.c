@@ -5,7 +5,6 @@
 
 extern int line; // memoryPool.c
 
-// TODO: user can change the size of memory pool
 long long *symbols, // symbol table
     *currentId,     // currentId in symbol table
     token = 0,      // current token
@@ -48,11 +47,21 @@ void getIdentifier()
     return;
 }
 
+static void swap(char *l, char *r)
+{
+    char t;
+    t = *r;
+    *r = *l;
+    *l = t;
+}
+
 void getInt()
 {
     // parse number, three kinds: dec(123) hex(0x123) oct(017)
+    int i, j;
+    lastPos = data;
     tokenVal = token - '0';
-    if (tokenVal > 0) // dec, starts with [1-9]
+    if (tokenVal > 0) // dec, starts with [1-9], float, xxx.xxx and xxx[e/E][+/-]xxx
     {
         token = *src;
         while (token >= '0' && token <= '9')
@@ -60,6 +69,37 @@ void getInt()
             tokenVal = tokenVal * 10 + token - '0';
             token = *++src;
         }
+
+        if (token == '.' || token == 'E' || token == 'e')
+        {
+            while (tokenVal > 0)
+            {
+                *data++ = tokenVal % 10 + '0';
+                tokenVal = tokenVal / 10;
+            }
+
+            i = data - lastPos - 1;
+            j = 0;
+            while (j < i)
+                swap(lastPos + (j++), lastPos + (i--));
+            *data++ = token;
+            token = *++src;
+            if (token == '+' || token == '-')
+            {
+                *data++ = token;
+                token = *++src;
+            }
+            while (token >= '0' && token <= '9')
+            {
+                *data++ = token;
+                token = *++src;
+            }
+            data++;
+            token = Flo;
+            tokenVal = (long long)lastPos;
+        }
+        else
+            token = Num;
     }
     else // starts with 0
     {
@@ -86,10 +126,8 @@ void getInt()
                 token = *++src;
             }
         }
+        token = Num;
     }
-
-    token = Num;
-    return;
 }
 // NOTICE:
 //      1. This function not only parse a string but also parse a single charactor
@@ -250,7 +288,10 @@ int nextToken()
         else if (token >= '0' && token <= '9') // integer
         {
             getInt();
-            return CONST;
+            if (token == Flo)
+                return CONST_FLO;
+            else if (token == Num)
+                return CONST_INT;
         }
         else if (token == '/') // comment
         {
@@ -270,7 +311,10 @@ int nextToken()
         else if (token == '"' || token == '\'') // string
         {
             getString();
-            return CONST;
+            if (token == Num)
+                return CONST_INT;
+            else
+                return CONST_STR;
         }
         else if (token == ';' || token == '{' || token == '}' || token == '(' || token == ')' || token == ',' || token == ':')
         {

@@ -237,8 +237,10 @@ static void displayTernaryOp(TernaryOpNode *p)
 static void displayExpr(ExprNode *p)
 {
     indent();
-    if (p->t == ConstVal)
+    if (p->t == ConstInt)
         printf("Constant Expression: %lld\n", (long long)(p->n));
+    else if (p->t == ConstFlo)
+        printf("Constant Expression: %s\n", (char *)(p->n));
     else if (p->t == ConstStr)
         printf("Constant Expression: \"%s\"\n", (char *)(p->n));
     else if (p->t == FunCall)
