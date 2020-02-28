@@ -1,10 +1,10 @@
 objects = main.c memoryPool.c tokenizer.c lexer.c parser.c ast.c display.c rearrange.c
 
 debug: $(objects)
-	gcc -g -O0 $(objects) -o mlpc
+	gcc -g -O0 $(objects) -o ./bin/mlpc
 
 main: $(objects)
-	gcc -o mlpc $(objects)
+	gcc $(objects) -o ./bin/mlpc 
 
 clean: 
-	-rm mlpc
+	-rm ./bin/mlpc

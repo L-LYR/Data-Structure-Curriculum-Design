@@ -52,6 +52,7 @@ int main(int argc, char **argv)
     sprintf(filename, "%s", *argv);
     readFromFile();
     allocMemoryPool();
+
     if (l)
     {
         fp = freopen(strcat(filename, ".lex"), "w", stdout);
@@ -65,7 +66,7 @@ int main(int argc, char **argv)
     }
     if (s)
     {
-        sprintf(filename, "%s", "input.c");
+        sprintf(filename, "%s", *argv);
         fp = freopen(strcat(filename, ".ast"), "w", stdout);
         if (fp == NULL)
         {
@@ -80,8 +81,8 @@ int main(int argc, char **argv)
     {
         if (s == 0)
             syntaxAnalysis();
-
-        fp = freopen("output.c", "w", stdout);
+        sprintf(filename, "%s", *argv);
+        fp = freopen(strcat(filename, ".res"), "w", stdout);
         if (fp == NULL)
         {
             printf("Cannot open the File LexicalAnalysis\n");
