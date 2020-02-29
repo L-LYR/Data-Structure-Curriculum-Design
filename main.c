@@ -9,11 +9,13 @@ int main(int argc, char **argv)
     FILE *fp;
     int l, s, r, f; // flag for choosing operations
                     // lexical analysis, syntax analysis, rearrange source code
+    int i;
+    char **p;
     f = l = s = r = 0;
-    argc--;
-    argv++;
+    i = argc - 1;
+    p = argv + 1;
 
-    if (argc < 1 || argc > 5)
+    if (i < 1 || i > 5)
     {
         printf("usage: mlpc <-operation> <filename> \n");
         printf("    -l  lexical analysis\n");
@@ -23,9 +25,9 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    while (argv > 0 && **argv == '-')
+    while (i > 0 && **p == '-')
     {
-        switch ((*argv)[1])
+        switch ((*p)[1])
         {
         case 'l':
             l = 1;
@@ -40,11 +42,11 @@ int main(int argc, char **argv)
             f = 1;
             break;
         }
-        --argc;
-        ++argv;
+        --i;
+        ++p;
     }
 
-    if (argc < 1)
+    if (i < 1)
     {
         printf("usage: mlpc <-operation> <filename> \n");
         printf("    -l  lexical analysis\n");
@@ -54,7 +56,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    sprintf(filename, "%s", *argv);
+    sprintf(filename, "%s", *p);
     readFromFile();
     allocMemoryPool();
 

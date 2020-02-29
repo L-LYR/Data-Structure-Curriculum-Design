@@ -12,7 +12,7 @@ char *map[] = {
     "void", "int", "float", "char", "else", "enum", "if", "return",
     "sizeof", "while", "for", "Break", "Continue",
     "=", "?", "|", "&", "||", "^", "&&", "==", "!=", "<", ">", "<=",
-    ">=", "<<", ">>", "+", "-", "*", "/", "%%", "++", "--", "["};
+    ">=", "<<", ">>", "+", "-", "*", "/", "%", "++", "--", "["};
 
 // initialize symbol table
 void initSymbolTab()

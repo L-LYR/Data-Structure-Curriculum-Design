@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
 {
     mlpc_main = "bin/mlpc";
+    setWindowIcon(QIcon(":/img/Hammer.ico"));
+
     createActions();
     createStatusBar();
     splitMainWin();
@@ -14,7 +16,6 @@ MainWindow::MainWindow(QWidget* parent)
 
 void MainWindow::open()
 {
-    qDebug() << "open() is triggered";
     curFileName = QFileDialog::getOpenFileName(this);
     if (!curFileName.isEmpty())
         loadFile(curFileName);

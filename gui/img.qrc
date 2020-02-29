@@ -4,5 +4,6 @@
         <file>img/S.png</file>
         <file>img/L.png</file>
         <file>img/Rearrange.png</file>
+        <file>img/Hammer.ico</file>
     </qresource>
 </RCC>
