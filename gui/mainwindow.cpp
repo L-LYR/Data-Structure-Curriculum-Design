@@ -126,7 +126,7 @@ void MainWindow::loadFile(const QString& fileName)
                 .arg(QDir::toNativeSeparators(fileName), file.errorString()));
         return;
     }
-
+    left->clear();
     QTextStream in(&file);
     int i = 1;
     while (!in.atEnd()) {
