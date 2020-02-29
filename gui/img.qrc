@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/Open.png</file>
+        <file>img/S.png</file>
+        <file>img/L.png</file>
+        <file>img/Rearrange.png</file>
+    </qresource>
+</RCC>
