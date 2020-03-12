@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include "treemodel.h"
 #include <QMainWindow>
 #include <QtWidgets>
 class MainWindow : public QMainWindow {
@@ -20,11 +21,12 @@ private:
     void createActions();
     void createStatusBar();
     void splitMainWin();
-    void subprocess(const QStringList& argv);
+    QString subprocess(const QStringList& argv);
 
 private:
-    QSplitter* splitterMain;
-    QTextEdit *left, *right;
+    QSplitter *splitterMain, *splitterRight, *splitterLeft;
+    QTextEdit *leftUp, *rightUp;
+    QTreeView *rightDown, *leftDown;
     QString curFileName;
     QString mlpc_main;
 };

@@ -20,6 +20,8 @@ enum class_token
     Num = 256,
     Flo,
     Fun,
+    FunDec,
+    FunDef,
     Glo,
     Loc,
     Id,

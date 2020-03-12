@@ -18,7 +18,7 @@ extern void *makeNode(int t);
 extern void *setNode(int t);
 extern void changeToFuncDef();
 
-void *cn; // current node
+void *cn;     // current node
 int exprType; // the type of an expression
 int isLvalue; // mark of lvalue
 int params;   // number of parameters of function
@@ -53,7 +53,7 @@ static void enumDeclaration()
             printf("Line %d: redeclaration of enumerator\n", line);
             exit(-1);
         }
-        else if (currentId[Class] == Fun)
+        else if (currentId[Class] == FunDec || currentId[Class] == FunDef || currentId[Class] == Fun)
         {
             printf("Line %d: redeclaration of deferent type\n", line);
             exit(-1);
@@ -128,7 +128,7 @@ static void functionParameter(Func *fl)
         }
         if (currentId[Class])
         {
-            if (currentId[Class] == Fun)
+            if (currentId[Class] == FunDec || currentId[Class] == FunDef || currentId[Class] == Fun)
             {
                 printf("Line %d: redeclaration of function\n", line);
                 exit(-1);
@@ -175,7 +175,7 @@ static void functionCall(FunCallNode *p)
         ++i;
     }
     match(')');
-    if (fn[Class] != Fun)
+    if (fn[Class] != FunDec && fn[Class] != FunDef && fn[Class] != Fun)
     {
         printf("Line %d: bad function call\n", line);
         exit(-1);
@@ -517,7 +517,7 @@ static ExprNode *binaryOpExpr(int level, ExprNode *p)
         }
         else if (token == Or)
         {
-            match(Lan);
+            match(Or);
             q->t = Binary;
             q->n = makeNode(Binary);
             ((BinaryOpNode *)(q->n))->op[0] = '|';
@@ -741,6 +741,27 @@ static void ifStm(IfNode *p)
         p->b.n = NULL;
     }
 }
+static void forStm(ForNode *p)
+{
+    match(For);
+    match('(');
+    if (token == ';')
+        p->i = NULL;
+    else
+        p->i = expression(Assign);
+    match(';');
+    if (token == ';')
+        p->c = NULL;
+    else
+        p->c = expression(Assign);
+    match(';');
+    if (token == ')')
+        p->u = NULL;
+    else
+        p->u = expression(Assign);
+    match(')');
+    statement(&(p->s));
+}
 
 static void whileStm(WhileNode *p)
 {
@@ -777,6 +798,12 @@ static void statement(StateNode *p)
         p->t = WHILE;
         p->n = makeNode(WHILE);
         whileStm(p->n);
+    }
+    else if (token == For)
+    {
+        p->t = FOR;
+        p->n = makeNode(FOR);
+        forStm(p->n);
     }
     else if (token == '{')
     {
@@ -863,6 +890,11 @@ static void functionBody()
                 else if (currentId[Class] == Loc)
                 {
                     printf("Line %d: redeclaration of local variable\n", line);
+                    exit(-1);
+                }
+                else if (currentId[Class] == Fun || currentId[Class] == FunDef || currentId[Class] == FunDec)
+                {
+                    printf("Line %d: redeclaration or redefinition of deferent type\n", line);
                     exit(-1);
                 }
 
@@ -976,12 +1008,16 @@ static void globalDeclaration()
             printf("Line %d: redeclaration of global variable\n", line);
             exit(-1);
         }
+        if (currentId[Class] == Fun)
+        {
+            printf("Line %d: redeclaration or redefinition of function\n", line);
+            exit(-1);
+        }
 
         match(Id);
         currentId[Type] = type;
         if (token == '(')
         {
-            currentId[Class] = Fun;
             tmp = currentId;
             memcpy(fl->id, (char *)currentId[Name], currentId[Len]);
             fl->rt = type;
@@ -997,7 +1033,29 @@ static void globalDeclaration()
             {
                 match('{');
                 changeToFuncDef();
+                if (tmp[Class] == FunDef)
+                {
+                    printf("Line %d: redefinition of function\n", line);
+                    exit(-1);
+                }
+                else if (tmp[Class] == FunDec)
+                    tmp[Class] = Fun;
+                else
+                    tmp[Class] = FunDef;
+
                 functionBody();
+            }
+            else
+            {
+                if (tmp[Class] == FunDec)
+                {
+                    printf("Line %d: redeclaration of function\n", line);
+                    exit(-1);
+                }
+                else if (tmp[Class] == FunDef)
+                    tmp[Class] = Fun;
+                else
+                    tmp[Class] = FunDec;
             }
         }
         else

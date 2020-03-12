@@ -18,12 +18,12 @@ void allocMemoryPool()
     // fixed-size memory allocation
     line = 1;
 
-    if (!(symbols = malloc(poolSize << 2)))
+    if (!(symbols = malloc(poolSize)))
     {
         printf("Could not allocate %d memory for symbol table!\n", poolSize);
         exit(-1);
     }
-    memset(symbols, 0, poolSize << 2);
+    memset(symbols, 0, poolSize);
 
     if (!(oldData = data = malloc(poolSize)))
     {
@@ -54,8 +54,8 @@ void readFromFile()
     int fileSize = ftell(fp);
     rewind(fp);
 
-    poolSize = fileSize << 1;
-    nodeNum = (poolSize >> 3) + 10;
+    poolSize = fileSize << 4;
+    nodeNum = (fileSize << 2) + 10;
 
     if (!(src = oldSrc = malloc(poolSize)))
     {
@@ -138,6 +138,14 @@ void freeStatement(StateNode *p)
     {
         freeExprNode(((WhileNode *)(p->n))->c);
         freeStatement(&(((WhileNode *)(p->n))->s));
+        free(p->n);
+    }
+    else if (p->t == FOR)
+    {
+        freeExprNode(((ForNode *)(p->n))->i);
+        freeExprNode(((ForNode *)(p->n))->c);
+        freeExprNode(((ForNode *)(p->n))->u);
+        freeStatement(&(((ForNode *)(p->n))->s));
         free(p->n);
     }
     else if (p->t == BLOCK)

@@ -21,21 +21,20 @@ void MainWindow::open()
         loadFile(curFileName);
 }
 
-void MainWindow::subprocess(const QStringList& argv)
+QString MainWindow::subprocess(const QStringList& argv)
 {
     QProcess* subprocess = new QProcess(this);
     subprocess->start(mlpc_main, argv);
     if (!subprocess->waitForStarted()) {
         QMessageBox::warning(this, tr("Warning"), tr("Fail to start!"));
-        return;
+        return "";
     }
     while (subprocess->waitForFinished() == false) {
         QMessageBox::warning(this, tr("Warning"), tr("Fail to finish!"));
         subprocess->kill();
-        return;
+        return "";
     }
-    QString output = subprocess->readAll();
-    right->setPlainText(output);
+    return subprocess->readAll();
 }
 void MainWindow::lexicalAnalysis()
 {
@@ -43,10 +42,9 @@ void MainWindow::lexicalAnalysis()
         QMessageBox::warning(this, tr("Warning"), tr("No input!"));
         return;
     }
-    QStringList argv;
-    argv << "-l"
-         << curFileName;
-    subprocess(argv);
+    TreeModel* tree = new TreeModel(QStringList({ "Token", "Type" }),
+        subprocess(QStringList({ "-l", curFileName })));
+    leftDown->setModel(tree);
     statusBar()->showMessage(tr("Lexical Analysis Finished"), 2000);
 }
 
@@ -56,10 +54,9 @@ void MainWindow::syntaxAnalysis()
         QMessageBox::warning(this, tr("Warning"), tr("No input!"));
         return;
     }
-    QStringList argv;
-    argv << "-s"
-         << curFileName;
-    subprocess(argv);
+    TreeModel* tree = new TreeModel(QStringList({ "AST" }),
+        subprocess(QStringList({ "-s", curFileName })));
+    rightDown->setModel(tree);
     statusBar()->showMessage(tr("Syntax Analysis Finished"), 2000);
 }
 
@@ -69,20 +66,22 @@ void MainWindow::rearrange()
         QMessageBox::warning(this, tr("Warning"), tr("No input!"));
         return;
     }
-    QStringList argv;
-    argv << "-r"
-         << curFileName;
-    subprocess(argv);
+    QString output = subprocess(QStringList({ "-r", curFileName }));
+    QTextStream in(&output);
+    int i = 1;
+    while (!in.atEnd()) {
+        rightUp->append(QString("%1  ").arg(i, 3) + in.readLine());
+        i++;
+    }
     statusBar()->showMessage(tr("Code Rearranged"), 2000);
 }
 
 void MainWindow::createActions()
 {
-    setFixedSize(960, 540);
     QToolBar* toolBar = addToolBar(tr("File"));
     toolBar->setMovable(false);
 
-    QAction* openAct = new QAction(QIcon(":/img/Open.png"), tr("Open"), this);
+    QAction* openAct = new QAction(QIcon(":/img/Open.png"), tr("Open File"), this);
     openAct->setStatusTip(tr("Open an existing file"));
     connect(openAct, &QAction::triggered, this, &MainWindow::open);
     toolBar->addAction(openAct);
@@ -98,7 +97,7 @@ void MainWindow::createActions()
     toolBar->addAction(syntaxAnalysisAct);
 
     QAction* rearrangeAct = new QAction(QIcon(":/img/Rearrange.png"), tr("Rearrange"), this);
-    rearrangeAct->setStatusTip(tr("Rearrange the current file"));
+    rearrangeAct->setStatusTip(tr("Rearrange the current source code"));
     connect(rearrangeAct, &QAction::triggered, this, &MainWindow::rearrange);
     toolBar->addAction(rearrangeAct);
 }
@@ -111,10 +110,18 @@ void MainWindow::createStatusBar()
 void MainWindow::splitMainWin()
 {
     splitterMain = new QSplitter(Qt::Horizontal, this);
-    left = new QTextEdit(splitterMain);
-    right = new QTextEdit(splitterMain);
-    left->setReadOnly(true);
-    right->setReadOnly(true);
+
+    splitterLeft = new QSplitter(Qt::Vertical, splitterMain);
+    leftUp = new QTextEdit(splitterLeft);
+    leftDown = new QTreeView(splitterLeft);
+
+    splitterRight = new QSplitter(Qt::Vertical, splitterMain);
+    rightUp = new QTextEdit(splitterRight);
+    rightDown = new QTreeView(splitterRight);
+
+    leftUp->setReadOnly(true);
+    rightUp->setReadOnly(true);
+
     setCentralWidget(splitterMain);
 }
 
@@ -127,11 +134,11 @@ void MainWindow::loadFile(const QString& fileName)
                 .arg(QDir::toNativeSeparators(fileName), file.errorString()));
         return;
     }
-    left->clear();
+    leftUp->clear();
     QTextStream in(&file);
     int i = 1;
     while (!in.atEnd()) {
-        left->append(QString("%1  ").arg(i, 3) + in.readLine());
+        leftUp->append(QString("%1  ").arg(i, 3) + in.readLine());
         i++;
     }
 

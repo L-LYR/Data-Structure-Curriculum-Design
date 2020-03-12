@@ -10,6 +10,7 @@ extern void indent(), displayStar(int i), displayType(int t); //display.c
 extern int ind;
 
 int flag;
+int tempInd;
 
 static void printEnumDec(EnumDecNode *p)
 {
@@ -203,12 +204,43 @@ static void printIfStm(IfNode *p)
     printf("if (");
     printExpr(p->c);
     printf(")\n");
-    printStatement(&(p->a));
+
+    if (tempInd != 0)
+    {
+        ind = tempInd;
+        tempInd = 0;
+    }
+
+    if (p->a.t != BLOCK)
+    {
+        ind += 4;
+        printStatement(&(p->a));
+        ind -= 4;
+    }
+    else
+        printStatement(&(p->a));
     if (p->b.t != EMPTY)
     {
         indent();
-        printf("else\n");
-        printStatement(&(p->b));
+        if (p->b.t == IF)
+        {
+            tempInd = ind;
+            ind = 0;
+            printf("else ");
+            printStatement(&(p->b));
+        }
+        else if (p->b.t == BLOCK)
+        {
+            printf("else\n");
+            printStatement(&(p->b));
+        }
+        else
+        {
+            printf("else\n");
+            ind += 4;
+            printStatement(&(p->b));
+            ind -= 4;
+        }
     }
 }
 
@@ -217,7 +249,33 @@ static void printWhileStm(WhileNode *p)
     printf("while (");
     printExpr(p->c);
     printf(")\n");
-    printStatement(&(p->s));
+    if (p->s.t != BLOCK)
+    {
+        ind += 4;
+        printStatement(&(p->s));
+        ind -= 4;
+    }
+    else
+        printStatement(&(p->s));
+}
+
+static void printForStm(ForNode *p)
+{
+    printf("for (");
+    printExpr(p->i);
+    printf("; ");
+    printExpr(p->c);
+    printf("; ");
+    printExpr(p->u);
+    printf(")\n");
+    if (p->s.t != BLOCK)
+    {
+        ind += 4;
+        printStatement(&(p->s));
+        ind -= 4;
+    }
+    else
+        printStatement(&(p->s));
 }
 
 static void printBlockStm(BlockNode *p)
@@ -246,6 +304,8 @@ static void printStatement(StateNode *p)
         printIfStm(p->n);
     else if (p->t == WHILE)
         printWhileStm(p->n);
+    else if (p->t == FOR)
+        printForStm(p->n);
     else if (p->t == BLOCK)
         printBlockStm(p->n);
     else if (p->t == BREAK)

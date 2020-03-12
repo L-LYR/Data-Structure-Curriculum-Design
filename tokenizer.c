@@ -56,7 +56,7 @@ static void swap(char *l, char *r)
     *l = t;
 }
 
-static void getInt()
+static void getNum()
 {
     // parse number, three kinds: dec(123) hex(0x123) oct(017)
     int i, j;
@@ -116,6 +116,21 @@ static void getInt()
                 tokenVal = tokenVal * 16 + (token & 15) + (token >= 'A' ? 9 : 0);
                 token = *++src;
             }
+            token = Num;
+        }
+        else if (*src == '.')
+        {
+            *data++ = '0';
+            *data++ = *src++;
+            token = *src;
+            while (token >= '0' && token <= '9')
+            {
+                *data++ = token;
+                token = *++src;
+            }
+            data++;
+            token = Flo;
+            tokenVal = (long long)lastPos;
         }
         else
         {
@@ -126,8 +141,8 @@ static void getInt()
                 tokenVal = tokenVal * 8 + token - '0';
                 token = *++src;
             }
+            token = Num;
         }
-        token = Num;
     }
 }
 // NOTICE:
@@ -286,7 +301,7 @@ int nextToken()
         }
         else if (token >= '0' && token <= '9') // integer
         {
-            getInt();
+            getNum();
             if (token == Flo)
                 return CONST_FLO;
             else if (token == Num)

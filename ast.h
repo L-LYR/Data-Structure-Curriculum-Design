@@ -112,6 +112,7 @@ enum StateType
 {
     IF = 1024,
     WHILE,
+    FOR,
     BLOCK,
     RETURN,
     CONTINUE,
@@ -144,6 +145,16 @@ typedef struct WhileNode
     struct ExprNode *c;
     struct StateNode s;
 } WhileNode;
+// for statement node
+// <for> <(> [initialization expression] <;> [condition expression] <;> [update expression] <)>
+// [{] <statement> [}]
+
+typedef struct ForNode
+{
+    struct ExprNode *i, *c, *u;
+    struct StateNode s;
+} ForNode;
+
 // block statement node
 //  <{> <statement> <}>
 typedef struct BlockNode

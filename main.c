@@ -11,6 +11,7 @@ int main(int argc, char **argv)
                     // lexical analysis, syntax analysis, rearrange source code
     int i;
     char **p;
+
     f = l = s = r = 0;
     i = argc - 1;
     p = argv + 1;
@@ -41,6 +42,9 @@ int main(int argc, char **argv)
         case 'f':
             f = 1;
             break;
+        default:
+            printf("Unknown operation!\n");
+            return -1;
         }
         --i;
         ++p;
@@ -48,11 +52,7 @@ int main(int argc, char **argv)
 
     if (i < 1)
     {
-        printf("usage: mlpc <-operation> <filename> \n");
-        printf("    -l  lexical analysis\n");
-        printf("    -s  syntax analysis\n");
-        printf("    -r  rearrange source code\n");
-        printf("    -f  save all outputs in files\n");
+        printf("Lack of filename!\n");
         return -1;
     }
 
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     {
         if (f)
         {
-            sprintf(filename, "%s", *argv);
+            sprintf(filename, "%s", *p);
             fp = freopen(strcat(filename, ".ast"), "w", stdout);
             if (fp == NULL)
             {
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
             syntaxAnalysis();
         if (f)
         {
-            sprintf(filename, "%s", *argv);
+            sprintf(filename, "%s", *p);
             fp = freopen(strcat(filename, ".res"), "w", stdout);
             if (fp == NULL)
             {

@@ -18,7 +18,7 @@ void indent()
 static void displayEnumDecNode(EnumDecNode *p)
 {
     Var *q;
-    printf("Enum Declaration: \n");
+    printf("Enum Declaration\n");
 
     ind += 4;
     indent();
@@ -29,7 +29,7 @@ static void displayEnumDecNode(EnumDecNode *p)
         printf("(null)\n");
 
     indent();
-    printf("Enum Variable List: \n");
+    printf("Enum Variable List\n");
     ind += 4;
     q = p->vl;
     while (*(q->id))
@@ -73,12 +73,12 @@ static void displayVarList(Var *p)
 static void displayGloDecNode(GloDecNode *p)
 {
     Func *f;
-    printf("Global Declaration: \n");
+    printf("Global Declaration\n");
     if (*((p->vl)->id))
     {
         ind += 4;
         indent();
-        printf("Global Variable Declaration: \n");
+        printf("Global Variable Declaration\n");
         displayVarList(p->vl);
         ind -= 4;
     }
@@ -87,7 +87,7 @@ static void displayGloDecNode(GloDecNode *p)
     {
         ind += 4;
         indent();
-        printf("Function Declaration: \n");
+        printf("Function Declaration\n");
         ind += 4;
         f = p->fl;
         while (*(f->id))
@@ -101,14 +101,14 @@ static void displayGloDecNode(GloDecNode *p)
             printf("\n");
 
             indent();
-            printf("Parameter List: ");
+            printf("Parameter List");
             if (*(f->pl)->id)
             {
                 printf("\n");
                 displayVarList(f->pl);
             }
             else
-                printf("(null)\n");
+                printf(": (null)\n");
             f++;
         }
         ind -= 8;
@@ -117,9 +117,9 @@ static void displayGloDecNode(GloDecNode *p)
 
 static void displayLocDecNode(LocDecNode *p)
 {
-    printf("Line %d: \n", p->l);
     indent();
-    printf("Local Variable Declaration: \n");
+    printf("Line %d: ", p->l);
+    printf("Local Variable Declaration\n");
     displayVarList(p->vl);
 }
 static void displayExpr(ExprNode *p);
@@ -130,14 +130,22 @@ static void displayFunCall(FunCallNode *p)
     indent();
     printf("Function Name: %s\n", p->n);
     indent();
-    printf("Input Parameter List: \n");
-    ind += 4;
-    while (p->pl[i] != NULL)
+    if (p->pl[i] == NULL)
     {
-        displayExpr(p->pl[i]);
-        i++;
+        printf("Input Parameter List: (null)\n");
+        ind -= 4;
     }
-    ind -= 8;
+    else
+    {
+        printf("Input Parameter List\n");
+        ind += 4;
+        while (p->pl[i] != NULL)
+        {
+            displayExpr(p->pl[i]);
+            i++;
+        }
+        ind -= 8;
+    }
 }
 
 static void displayVarExpr(VarNode *p)
@@ -168,7 +176,6 @@ static void displayUnaryOp(UnaryOpNode *p, int t)
     {
         printf("Parenthesis: %s\n", p->op);
         indent();
-        printf("Content: \n");
         ind += 4;
         displayExpr(p->o);
         ind -= 4;
@@ -186,7 +193,7 @@ static void displayUnaryOp(UnaryOpNode *p, int t)
     else if (t == Postfix)
         printf("Postfix Expression: %s\n", p->op);
     indent();
-    printf("Operand: \n");
+    printf("Operand\n");
     ind += 4;
     displayExpr(p->o);
     ind -= 4;
@@ -200,13 +207,13 @@ static void displayBinaryOp(BinaryOpNode *p, int t)
         printf("PostFix Expression: []\n");
 
     indent();
-    printf("Left Operand: \n");
+    printf("Left Operand\n");
     ind += 4;
     displayExpr(p->lo);
     ind -= 4;
 
     indent();
-    printf("Right Operand: \n");
+    printf("Right Operand\n");
     ind += 4;
     displayExpr(p->ro);
     ind -= 4;
@@ -217,19 +224,19 @@ static void displayTernaryOp(TernaryOpNode *p)
     printf("Ternary Expression: ? :\n");
 
     indent();
-    printf("Condition: \n");
+    printf("Condition\n");
     ind += 4;
     displayExpr(p->c);
     ind -= 4;
 
     indent();
-    printf("Branch A: \n");
+    printf("Branch A\n");
     ind += 4;
     displayExpr(p->a);
     ind -= 4;
 
     indent();
-    printf("Branch B: \n");
+    printf("Branch B\n");
     ind += 4;
     displayExpr(p->b);
     ind -= 4;
@@ -245,7 +252,7 @@ static void displayExpr(ExprNode *p)
         printf("Constant Expression: \"%s\"\n", (char *)(p->n));
     else if (p->t == FunCall)
     {
-        printf("Function Call:\n");
+        printf("Function Call\n");
         displayFunCall(p->n);
     }
     else if (p->t == Variable)
@@ -261,17 +268,17 @@ static void displayExpr(ExprNode *p)
 static void displayStatement(StateNode *p);
 static void displayIfStm(IfNode *p)
 {
-    printf("If Statement: \n");
+    printf("If Statement\n");
 
     ind += 4;
     indent();
-    printf("Condition: \n");
+    printf("Condition\n");
     ind += 4;
     displayExpr(p->c);
 
     ind -= 4;
     indent();
-    printf("Branch A: \n");
+    printf("Branch A\n");
     ind += 4;
     displayStatement(&(p->a));
     ind -= 4;
@@ -279,7 +286,7 @@ static void displayIfStm(IfNode *p)
     if (p->b.t != EMPTY)
     {
         indent();
-        printf("Branch B: \n");
+        printf("Branch B\n");
         ind += 4;
         displayStatement(&(p->b));
         ind -= 4;
@@ -290,17 +297,62 @@ static void displayIfStm(IfNode *p)
 
 static void displayWhileStm(WhileNode *p)
 {
-    printf("While Statement: \n");
+    printf("While Statement\n");
 
     ind += 4;
     indent();
-    printf("Condition: \n");
+    printf("Condition\n");
     ind += 4;
     displayExpr(p->c);
 
     ind -= 4;
     indent();
-    printf("Loop Body: \n");
+    printf("Loop Body\n");
+    ind += 4;
+    displayStatement(&(p->s));
+    ind -= 8;
+}
+
+static void displayForStm(ForNode *p)
+{
+    printf("For Statement\n");
+    ind += 4;
+
+    indent();
+    if (p->i == NULL)
+        printf("Initialization: (null)\n");
+    else
+    {
+        printf("Initialization\n");
+        ind += 4;
+        displayExpr(p->i);
+        ind -= 4;
+    }
+
+    indent();
+    if (p->i == NULL)
+        printf("Condition: (null)\n");
+    else
+    {
+        printf("Condition\n");
+        ind += 4;
+        displayExpr(p->c);
+        ind -= 4;
+    }
+
+    indent();
+    if (p->i == NULL)
+        printf("Update: (null)\n");
+    else
+    {
+        printf("Update\n");
+        ind += 4;
+        displayExpr(p->u);
+        ind -= 4;
+    }
+
+    indent();
+    printf("Loop Body\n");
     ind += 4;
     displayStatement(&(p->s));
     ind -= 8;
@@ -309,12 +361,12 @@ static void displayWhileStm(WhileNode *p)
 static void displayBlockStm(BlockNode *p)
 {
     StateNode *sl;
-    printf("Block Statement: ");
+    printf("Block Statement");
     ind += 4;
     sl = p->sl;
 
     if (!(sl->t))
-        printf("(null)\n");
+        printf(": (null)\n");
     else
     {
         printf("\n");
@@ -329,12 +381,14 @@ static void displayBlockStm(BlockNode *p)
 
 static void displayStatement(StateNode *p)
 {
-    printf("Line %d: \n", p->l);
     indent();
+    printf("Line %d: ", p->l);
     if (p->t == IF)
         displayIfStm(p->n);
     else if (p->t == WHILE)
         displayWhileStm(p->n);
+    else if (p->t == FOR)
+        displayForStm(p->n);
     else if (p->t == BLOCK)
         displayBlockStm(p->n);
     else if (p->t == BREAK)
@@ -356,7 +410,7 @@ static void displayStatement(StateNode *p)
     }
     else if (p->t == EXPR)
     {
-        printf("One Line Statement: \n");
+        printf("One Line Statement\n");
         ind += 4;
         displayExpr(p->n);
         ind -= 4;
@@ -382,7 +436,7 @@ static void displayFuncBody(Node *fb)
 
 static void displayFuncDef(FuncDefNode *p)
 {
-    printf("Function Definition: \n");
+    printf("Function Definition\n");
 
     ind += 4;
     indent();
@@ -394,17 +448,17 @@ static void displayFuncDef(FuncDefNode *p)
     printf("\n");
 
     indent();
-    printf("Parameter List: ");
+    printf("Parameter List");
     if (*(p->f.pl)->id)
     {
         printf("\n");
         displayVarList(p->f.pl);
     }
     else
-        printf("(null)\n");
+        printf(": (null)\n");
 
     indent();
-    printf("Function Body: \n");
+    printf("Function Body\n");
     displayFuncBody(p->fb);
     ind -= 4;
 }
@@ -414,14 +468,14 @@ void displayAST()
     Node *p = ast;
     while (p != NULL && p->t != 0)
     {
-        printf("Line %d: \n", p->l);
+        printf("Line %d: ", p->l);
         if (p->t == EnumDec)
             displayEnumDecNode(p->n);
         else if (p->t == GloDec)
             displayGloDecNode(p->n);
         else if (p->t == FuncDef)
             displayFuncDef(p->n);
-        printf("\n");
+        printf("\n\n");
         p = p->s;
     }
 }

@@ -19,10 +19,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    treeitem.cpp \
+    treemodel.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    treeitem.h \
+    treemodel.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -36,7 +40,9 @@ RC_ICONS += /img/Hammer.ico
 
 COPIES += INPUT_FILES
 
-INPUT_FILES.files = $$files(../test/*)
+INPUT_FILES.files += $$files(../test/ASTGenarationTest/*)\
+                     $$files(../test/errorTest/*)\
+                     $$files(../test/LexicalAnalysisTest/*)
 INPUT_FILES.path = $$OUT_PWD/test
 
 COPIES += BIN

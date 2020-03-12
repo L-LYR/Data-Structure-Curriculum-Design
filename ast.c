@@ -26,6 +26,8 @@ void *makeNode(int t)
         ret = calloc(1, sizeof(IfNode));
     else if (t == WHILE)
         ret = calloc(1, sizeof(WhileNode));
+    else if (t == FOR)
+        ret = calloc(1, sizeof(ForNode));
     else if (t == BLOCK)
         ret = calloc(1, sizeof(BlockNode));
     else if (t == RETURN || t == EXPR)
