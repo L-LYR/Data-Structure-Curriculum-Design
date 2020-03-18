@@ -36,7 +36,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     img.qrc \
 
-RC_ICONS += /img/Hammer.ico
+RC_ICONS += ./img/Hammer.ico
 
 COPIES += INPUT_FILES
 
