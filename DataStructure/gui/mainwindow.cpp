@@ -74,7 +74,7 @@ void MainWindow::createActions()
     toolBar->addAction(openAct);
 
     QAction* mlpc = new QAction(QIcon(":/img/Hammer.ico"), tr("Do lexing, parse and rearrange"), this);
-    mlpc->setStatusTip(tr("Do lexing, parse and rearrang"));
+    mlpc->setStatusTip(tr("Do lexing, parse and rearrange"));
     connect(mlpc, &QAction::triggered, this, &MainWindow::mlpc);
     toolBar->addAction(mlpc);
 }
