@@ -156,11 +156,11 @@ Line 33
     if		keyword
     (		delimiter
     a		identifier
-    <		operator
+    !=		operator
     b		identifier
-    ||		operator
-    c		identifier
-    >		operator
+    &&		operator
+    a		identifier
+    <		operator
     b		identifier
     )		delimiter
 Line 34
@@ -174,13 +174,13 @@ Line 35
     else		keyword
     if		keyword
     (		delimiter
-    a		identifier
-    !=		operator
-    b		identifier
-    &&		operator
     c		identifier
     ==		operator
     d		identifier
+    ||		operator
+    c		identifier
+    >		operator
+    b		identifier
     )		delimiter
 Line 36
     {		delimiter

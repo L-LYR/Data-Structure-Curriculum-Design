@@ -11,7 +11,6 @@ Node *ast, *lastNode, *curNode, *funcMark;
 void *makeNode(int t)
 {
     void *ret;
-
     if (t == EnumDec)
         ret = calloc(1, sizeof(EnumDecNode));
     else if (t == GloDec)
@@ -59,6 +58,7 @@ void *setNode(int t)
     curNode->t = t;
     ret = curNode->n = makeNode(t);
     curNode->l = line;
+    curNode->s = NULL;
 
     if (lastNode != NULL)
     {

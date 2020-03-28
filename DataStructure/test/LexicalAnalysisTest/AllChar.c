@@ -30,9 +30,9 @@ int main(void)
     c = (a == b) ? c : d;
     if (a == b && !(c <= d || d >= c))
         c = a << b;
-    else if (a < b || c > b)
+    else if (a != b && a < b)
         d = a >> b;
-    else if (a != b && c == d)
+    else if (c == d || c > b)
     {
         d = ++c;
         c = --d;

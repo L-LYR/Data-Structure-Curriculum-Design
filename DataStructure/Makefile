@@ -4,7 +4,7 @@ debug: $(objects)
 	gcc -g -O0 $(objects) -o ./bin/mlpc
 
 main: $(objects)
-	gcc $(objects) -o ./bin/mlpc 
+	gcc $(objects) -o ./bin/mlpc
 
 clean: 
 	-rm ./bin/mlpc

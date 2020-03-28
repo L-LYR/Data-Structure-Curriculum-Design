@@ -54,14 +54,15 @@ void readFromFile()
     int fileSize = ftell(fp);
     rewind(fp);
 
-    poolSize = fileSize << 4;
-    nodeNum = (fileSize << 2) + 10;
+    poolSize = (fileSize << 4) + 1000;
+    nodeNum = fileSize * 0.05 + 5;
 
     if (!(src = oldSrc = malloc(poolSize)))
     {
         printf("Could not allocate %d memory for source code!\n", poolSize);
         exit(-1);
     }
+    memset(src, 0, poolSize);
 
     if ((ret = fread(src, 1, fileSize, fp)) < fileSize)
     {

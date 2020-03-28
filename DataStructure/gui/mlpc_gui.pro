@@ -4,8 +4,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-CONFIG += file_copy
-
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -34,7 +32,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    img.qrc \
+    img.qrc
 
 RC_ICONS += ./img/Hammer.ico
 
@@ -43,9 +41,9 @@ COPIES += INPUT_FILES
 INPUT_FILES.files += $$files(../test/ASTGenarationTest/*)\
                      $$files(../test/errorTest/*)\
                      $$files(../test/LexicalAnalysisTest/*)
-INPUT_FILES.path = $$OUT_PWD/test
+INPUT_FILES.path = $$OUT_PWD/testfiles
 
 COPIES += BIN
 
 BIN.files = $$files(../bin/*)
-BIN.path = $$OUT_PWD/bin
+BIN.path = $$OUT_PWD

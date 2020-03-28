@@ -440,7 +440,7 @@ static ExprNode *binaryOpExpr(int level, ExprNode *p)
             match(Assign);
             if (isLvalue == 0)
             {
-                printf("%d: bad lvalue in assignment\n", line);
+                printf("Line %d: bad lvalue in assignment\n", line);
                 exit(-1);
             }
             ((BinaryOpNode *)(q->n))->ro = expression(Assign);

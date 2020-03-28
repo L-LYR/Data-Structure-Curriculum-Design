@@ -1,12 +1,10 @@
 #include "mainwindow.h"
+#include "treemodel.h"
 #include <QDebug>
-#include <QPushButton>
 #include <QtWidgets>
-
-MainWindow::MainWindow(QWidget* parent)
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    mlpc_main = "bin/mlpc";
     setWindowIcon(QIcon(":/img/Hammer.ico"));
 
     createActions();
@@ -21,59 +19,41 @@ void MainWindow::open()
         loadFile(curFileName);
 }
 
-QString MainWindow::subprocess(const QStringList& argv)
+void MainWindow::do_mlpc(const QStringList &argv, QString &ret)
 {
-    QProcess* subprocess = new QProcess(this);
-    subprocess->start(mlpc_main, argv);
-    if (!subprocess->waitForStarted()) {
+    QProcess *sp = new QProcess(this);
+    sp->start("./mlpc.exe", argv);
+    if (!sp->waitForStarted()) {
         QMessageBox::warning(this, tr("Warning"), tr("Fail to start!"));
-        return "";
+        return;
     }
-    while (subprocess->waitForFinished() == false) {
+    while (sp->waitForFinished() == false) {
         QMessageBox::warning(this, tr("Warning"), tr("Fail to finish!"));
-        subprocess->kill();
-        return "";
-    }
-    return subprocess->readAll();
-}
-void MainWindow::lexicalAnalysis()
-{
-    if (curFileName == "") {
-        QMessageBox::warning(this, tr("Warning"), tr("No input!"));
+        sp->kill();
         return;
     }
-    TreeModel* tree = new TreeModel(QStringList({ "Token", "Type" }),
-        subprocess(QStringList({ "-l", curFileName })));
+    ret = sp->readAll();
+}
+
+void MainWindow::mlpc()
+{
+    QString ret;
+    do_mlpc(QStringList({"-l", curFileName}), ret);
+    TreeModel* tree = new TreeModel(QStringList({ "Token", "Type" }), ret);
     leftDown->setModel(tree);
-    statusBar()->showMessage(tr("Lexical Analysis Finished"), 2000);
-}
 
-void MainWindow::syntaxAnalysis()
-{
-    if (curFileName == "") {
-        QMessageBox::warning(this, tr("Warning"), tr("No input!"));
-        return;
-    }
-    TreeModel* tree = new TreeModel(QStringList({ "AST" }),
-        subprocess(QStringList({ "-s", curFileName })));
+    do_mlpc(QStringList({"-s", curFileName}), ret);
+    tree = new TreeModel(QStringList({"AST"}), ret);
     rightDown->setModel(tree);
-    statusBar()->showMessage(tr("Syntax Analysis Finished"), 2000);
-}
 
-void MainWindow::rearrange()
-{
-    if (curFileName == "") {
-        QMessageBox::warning(this, tr("Warning"), tr("No input!"));
-        return;
-    }
-    QString output = subprocess(QStringList({ "-r", curFileName }));
-    QTextStream in(&output);
+    do_mlpc(QStringList({"-r", curFileName}), ret);
+    rightUp->clear();
+    QTextStream in(&ret);
     int i = 1;
     while (!in.atEnd()) {
         rightUp->append(QString("%1  ").arg(i, 3) + in.readLine());
         i++;
     }
-    statusBar()->showMessage(tr("Code Rearranged"), 2000);
 }
 
 void MainWindow::createActions()
@@ -86,20 +66,10 @@ void MainWindow::createActions()
     connect(openAct, &QAction::triggered, this, &MainWindow::open);
     toolBar->addAction(openAct);
 
-    QAction* lexicalAnalysisAct = new QAction(QIcon(":/img/L.png"), tr("Lexical Analysis"), this);
-    lexicalAnalysisAct->setStatusTip(tr("Do lexing"));
-    connect(lexicalAnalysisAct, &QAction::triggered, this, &MainWindow::lexicalAnalysis);
-    toolBar->addAction(lexicalAnalysisAct);
-
-    QAction* syntaxAnalysisAct = new QAction(QIcon(":/img/S.png"), tr("Syntax Analysis"), this);
-    syntaxAnalysisAct->setStatusTip(tr("Parse"));
-    connect(syntaxAnalysisAct, &QAction::triggered, this, &MainWindow::syntaxAnalysis);
-    toolBar->addAction(syntaxAnalysisAct);
-
-    QAction* rearrangeAct = new QAction(QIcon(":/img/Rearrange.png"), tr("Rearrange"), this);
-    rearrangeAct->setStatusTip(tr("Rearrange the current source code"));
-    connect(rearrangeAct, &QAction::triggered, this, &MainWindow::rearrange);
-    toolBar->addAction(rearrangeAct);
+    QAction* mlpc = new QAction(QIcon(":/img/Hammer.ico"), tr("Do lexing, parse and rearrange"), this);
+    mlpc->setStatusTip(tr("Do lexing, parse and rearrang"));
+    connect(mlpc, &QAction::triggered, this, &MainWindow::mlpc);
+    toolBar->addAction(mlpc);
 }
 
 void MainWindow::createStatusBar()
@@ -130,8 +100,8 @@ void MainWindow::loadFile(const QString& fileName)
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, tr("Warning"),
-            tr("Cannot read file %1:\n%2.")
-                .arg(QDir::toNativeSeparators(fileName), file.errorString()));
+                             tr("Cannot read file %1:\n%2.")
+                                 .arg(QDir::toNativeSeparators(fileName), file.errorString()));
         return;
     }
     leftUp->clear();
@@ -146,3 +116,4 @@ void MainWindow::loadFile(const QString& fileName)
 }
 
 MainWindow::~MainWindow() {}
+

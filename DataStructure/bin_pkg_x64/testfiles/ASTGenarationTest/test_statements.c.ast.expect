@@ -1,0 +1,731 @@
+Line 1: Function Definition
+    Function Name: main
+    Return Type: int 
+    Parameter List: (null)
+    Function Body
+        Line 3: Local Variable Declaration
+            Variable Name: n
+            Variable Type: int 
+        Line 4: Local Variable Declaration
+            Variable Name: x
+            Variable Type: float 
+            Variable Name: ans
+            Variable Type: float 
+        Line 6: One Line Statement
+            Binary Expression: =
+            Left Operand
+                Primary Expression: x
+                    Type: float 
+                    Variable Range: Local
+            Right Operand
+                Constant Expression: 9000
+        Line 7: If Statement
+            Condition
+                Binary Expression: <
+                Left Operand
+                    Primary Expression: x
+                        Type: float 
+                        Variable Range: Local
+                Right Operand
+                    Constant Expression: 1000
+            Branch A
+                Line 8: One Line Statement
+                    Binary Expression: =
+                    Left Operand
+                        Primary Expression: ans
+                            Type: float 
+                            Variable Range: Local
+                    Right Operand
+                        Constant Expression: 0
+            Branch B
+                Line 9: If Statement
+                    Condition
+                        Binary Expression: <
+                        Left Operand
+                            Primary Expression: x
+                                Type: float 
+                                Variable Range: Local
+                        Right Operand
+                            Constant Expression: 2000
+                    Branch A
+                        Line 10: One Line Statement
+                            Binary Expression: =
+                            Left Operand
+                                Primary Expression: ans
+                                    Type: float 
+                                    Variable Range: Local
+                            Right Operand
+                                Binary Expression: *
+                                Left Operand
+                                    Parenthesis: ()
+                                                                            Binary Expression: -
+                                        Left Operand
+                                            Primary Expression: x
+                                                Type: float 
+                                                Variable Range: Local
+                                        Right Operand
+                                            Constant Expression: 1000
+                                Right Operand
+                                    Constant Expression: 0.05
+                    Branch B
+                        Line 11: If Statement
+                            Condition
+                                Binary Expression: <
+                                Left Operand
+                                    Primary Expression: x
+                                        Type: float 
+                                        Variable Range: Local
+                                Right Operand
+                                    Constant Expression: 3000
+                            Branch A
+                                Line 12: One Line Statement
+                                    Binary Expression: =
+                                    Left Operand
+                                        Primary Expression: ans
+                                            Type: float 
+                                            Variable Range: Local
+                                    Right Operand
+                                        Binary Expression: +
+                                        Left Operand
+                                            Binary Expression: *
+                                            Left Operand
+                                                Parenthesis: ()
+                                                                                                    Binary Expression: -
+                                                    Left Operand
+                                                        Primary Expression: x
+                                                            Type: float 
+                                                            Variable Range: Local
+                                                    Right Operand
+                                                        Constant Expression: 2000
+                                            Right Operand
+                                                Constant Expression: 0.10
+                                        Right Operand
+                                            Constant Expression: 50
+                            Branch B
+                                Line 13: If Statement
+                                    Condition
+                                        Binary Expression: <
+                                        Left Operand
+                                            Primary Expression: x
+                                                Type: float 
+                                                Variable Range: Local
+                                        Right Operand
+                                            Constant Expression: 4000
+                                    Branch A
+                                        Line 14: One Line Statement
+                                            Binary Expression: =
+                                            Left Operand
+                                                Primary Expression: ans
+                                                    Type: float 
+                                                    Variable Range: Local
+                                            Right Operand
+                                                Binary Expression: +
+                                                Left Operand
+                                                    Binary Expression: *
+                                                    Left Operand
+                                                        Parenthesis: ()
+                                                                                                                    Binary Expression: -
+                                                            Left Operand
+                                                                Primary Expression: x
+                                                                    Type: float 
+                                                                    Variable Range: Local
+                                                            Right Operand
+                                                                Constant Expression: 3000
+                                                    Right Operand
+                                                        Constant Expression: 0.15
+                                                Right Operand
+                                                    Constant Expression: 150
+                                    Branch B
+                                        Line 15: If Statement
+                                            Condition
+                                                Binary Expression: <
+                                                Left Operand
+                                                    Primary Expression: x
+                                                        Type: float 
+                                                        Variable Range: Local
+                                                Right Operand
+                                                    Constant Expression: 5000
+                                            Branch A
+                                                Line 16: One Line Statement
+                                                    Binary Expression: =
+                                                    Left Operand
+                                                        Primary Expression: ans
+                                                            Type: float 
+                                                            Variable Range: Local
+                                                    Right Operand
+                                                        Binary Expression: +
+                                                        Left Operand
+                                                            Binary Expression: *
+                                                            Left Operand
+                                                                Parenthesis: ()
+                                                                                                                                    Binary Expression: -
+                                                                    Left Operand
+                                                                        Primary Expression: x
+                                                                            Type: float 
+                                                                            Variable Range: Local
+                                                                    Right Operand
+                                                                        Constant Expression: 4000
+                                                            Right Operand
+                                                                Constant Expression: 0.20
+                                                        Right Operand
+                                                            Constant Expression: 300
+                                            Branch B
+                                                Line 18: One Line Statement
+                                                    Binary Expression: =
+                                                    Left Operand
+                                                        Primary Expression: ans
+                                                            Type: float 
+                                                            Variable Range: Local
+                                                    Right Operand
+                                                        Binary Expression: +
+                                                        Left Operand
+                                                            Binary Expression: *
+                                                            Left Operand
+                                                                Parenthesis: ()
+                                                                                                                                    Binary Expression: -
+                                                                    Left Operand
+                                                                        Primary Expression: x
+                                                                            Type: float 
+                                                                            Variable Range: Local
+                                                                    Right Operand
+                                                                        Constant Expression: 5000
+                                                            Right Operand
+                                                                Constant Expression: 0.25
+                                                        Right Operand
+                                                            Constant Expression: 500
+        Line 20: Local Variable Declaration
+            Variable Name: i
+            Variable Type: int 
+            Variable Name: j
+            Variable Type: int 
+            Variable Name: k
+            Variable Type: int 
+        Line 21: Local Variable Declaration
+            Variable Name: d
+            Variable Type: int **
+        Line 23: For Statement
+            Initialization
+                Binary Expression: =
+                Left Operand
+                    Primary Expression: k
+                        Type: int 
+                        Variable Range: Local
+                Right Operand
+                    Constant Expression: 0
+            Condition
+                Binary Expression: <
+                Left Operand
+                    Primary Expression: k
+                        Type: int 
+                        Variable Range: Local
+                Right Operand
+                    Primary Expression: n
+                        Type: int 
+                        Variable Range: Local
+            Update
+                Postfix Expression: ++
+                Operand
+                    Primary Expression: k
+                        Type: int 
+                        Variable Range: Local
+            Loop Body
+                Line 24: For Statement
+                    Initialization
+                        Binary Expression: =
+                        Left Operand
+                            Primary Expression: i
+                                Type: int 
+                                Variable Range: Local
+                        Right Operand
+                            Constant Expression: 0
+                    Condition
+                        Binary Expression: <
+                        Left Operand
+                            Primary Expression: i
+                                Type: int 
+                                Variable Range: Local
+                        Right Operand
+                            Primary Expression: n
+                                Type: int 
+                                Variable Range: Local
+                    Update
+                        Postfix Expression: ++
+                        Operand
+                            Primary Expression: i
+                                Type: int 
+                                Variable Range: Local
+                    Loop Body
+                        Line 25: For Statement
+                            Initialization
+                                Binary Expression: =
+                                Left Operand
+                                    Primary Expression: j
+                                        Type: int 
+                                        Variable Range: Local
+                                Right Operand
+                                    Constant Expression: 0
+                            Condition
+                                Binary Expression: <
+                                Left Operand
+                                    Primary Expression: j
+                                        Type: int 
+                                        Variable Range: Local
+                                Right Operand
+                                    Primary Expression: n
+                                        Type: int 
+                                        Variable Range: Local
+                            Update
+                                Postfix Expression: ++
+                                Operand
+                                    Primary Expression: j
+                                        Type: int 
+                                        Variable Range: Local
+                            Loop Body
+                                Line 26: If Statement
+                                    Condition
+                                        Binary Expression: >
+                                        Left Operand
+                                            PostFix Expression: []
+                                            Left Operand
+                                                PostFix Expression: []
+                                                Left Operand
+                                                    Primary Expression: d
+                                                        Type: int **
+                                                        Variable Range: Local
+                                                Right Operand
+                                                    Primary Expression: i
+                                                        Type: int 
+                                                        Variable Range: Local
+                                            Right Operand
+                                                Primary Expression: j
+                                                    Type: int 
+                                                    Variable Range: Local
+                                        Right Operand
+                                            Binary Expression: +
+                                            Left Operand
+                                                PostFix Expression: []
+                                                Left Operand
+                                                    PostFix Expression: []
+                                                    Left Operand
+                                                        Primary Expression: d
+                                                            Type: int **
+                                                            Variable Range: Local
+                                                    Right Operand
+                                                        Primary Expression: i
+                                                            Type: int 
+                                                            Variable Range: Local
+                                                Right Operand
+                                                    Primary Expression: k
+                                                        Type: int 
+                                                        Variable Range: Local
+                                            Right Operand
+                                                PostFix Expression: []
+                                                Left Operand
+                                                    PostFix Expression: []
+                                                    Left Operand
+                                                        Primary Expression: d
+                                                            Type: int **
+                                                            Variable Range: Local
+                                                    Right Operand
+                                                        Primary Expression: k
+                                                            Type: int 
+                                                            Variable Range: Local
+                                                Right Operand
+                                                    Primary Expression: j
+                                                        Type: int 
+                                                        Variable Range: Local
+                                    Branch A
+                                        Line 27: One Line Statement
+                                            Binary Expression: =
+                                            Left Operand
+                                                PostFix Expression: []
+                                                Left Operand
+                                                    PostFix Expression: []
+                                                    Left Operand
+                                                        Primary Expression: d
+                                                            Type: int **
+                                                            Variable Range: Local
+                                                    Right Operand
+                                                        Primary Expression: i
+                                                            Type: int 
+                                                            Variable Range: Local
+                                                Right Operand
+                                                    Primary Expression: j
+                                                        Type: int 
+                                                        Variable Range: Local
+                                            Right Operand
+                                                Binary Expression: +
+                                                Left Operand
+                                                    PostFix Expression: []
+                                                    Left Operand
+                                                        PostFix Expression: []
+                                                        Left Operand
+                                                            Primary Expression: d
+                                                                Type: int **
+                                                                Variable Range: Local
+                                                        Right Operand
+                                                            Primary Expression: i
+                                                                Type: int 
+                                                                Variable Range: Local
+                                                    Right Operand
+                                                        Primary Expression: k
+                                                            Type: int 
+                                                            Variable Range: Local
+                                                Right Operand
+                                                    PostFix Expression: []
+                                                    Left Operand
+                                                        PostFix Expression: []
+                                                        Left Operand
+                                                            Primary Expression: d
+                                                                Type: int **
+                                                                Variable Range: Local
+                                                        Right Operand
+                                                            Primary Expression: k
+                                                                Type: int 
+                                                                Variable Range: Local
+                                                    Right Operand
+                                                        Primary Expression: j
+                                                            Type: int 
+                                                            Variable Range: Local
+        Line 29: Jump Statement: return
+            Constant Expression: 0
+
+
+Line 32: Function Definition
+    Function Name: binarySearch
+    Return Type: int 
+    Parameter List
+        Variable Name: a
+        Variable Type: int *
+        Variable Name: n
+        Variable Type: int 
+        Variable Name: key
+        Variable Type: int 
+    Function Body
+        Line 34: Local Variable Declaration
+            Variable Name: low
+            Variable Type: int 
+            Variable Name: high
+            Variable Type: int 
+            Variable Name: mid
+            Variable Type: int 
+            Variable Name: midVal
+            Variable Type: int 
+        Line 36: One Line Statement
+            Binary Expression: =
+            Left Operand
+                Primary Expression: low
+                    Type: int 
+                    Variable Range: Local
+            Right Operand
+                Constant Expression: 0
+        Line 37: One Line Statement
+            Binary Expression: =
+            Left Operand
+                Primary Expression: high
+                    Type: int 
+                    Variable Range: Local
+            Right Operand
+                Binary Expression: -
+                Left Operand
+                    Primary Expression: n
+                        Type: int 
+                        Variable Range: Local
+                Right Operand
+                    Constant Expression: 1
+        Line 38: While Statement
+            Condition
+                Binary Expression: <=
+                Left Operand
+                    Primary Expression: low
+                        Type: int 
+                        Variable Range: Local
+                Right Operand
+                    Primary Expression: high
+                        Type: int 
+                        Variable Range: Local
+            Loop Body
+                Line 39: Block Statement
+                    Line 40: One Line Statement
+                        Binary Expression: =
+                        Left Operand
+                            Primary Expression: mid
+                                Type: int 
+                                Variable Range: Local
+                        Right Operand
+                            Binary Expression: /
+                            Left Operand
+                                Parenthesis: ()
+                                                                    Binary Expression: +
+                                    Left Operand
+                                        Primary Expression: low
+                                            Type: int 
+                                            Variable Range: Local
+                                    Right Operand
+                                        Primary Expression: high
+                                            Type: int 
+                                            Variable Range: Local
+                            Right Operand
+                                Constant Expression: 2
+                    Line 41: One Line Statement
+                        Binary Expression: =
+                        Left Operand
+                            Primary Expression: midVal
+                                Type: int 
+                                Variable Range: Local
+                        Right Operand
+                            PostFix Expression: []
+                            Left Operand
+                                Primary Expression: a
+                                    Type: int *
+                                    Variable Range: Local
+                            Right Operand
+                                Primary Expression: mid
+                                    Type: int 
+                                    Variable Range: Local
+                    Line 42: If Statement
+                        Condition
+                            Binary Expression: <
+                            Left Operand
+                                Primary Expression: midVal
+                                    Type: int 
+                                    Variable Range: Local
+                            Right Operand
+                                Primary Expression: key
+                                    Type: int 
+                                    Variable Range: Local
+                        Branch A
+                            Line 43: One Line Statement
+                                Binary Expression: =
+                                Left Operand
+                                    Primary Expression: low
+                                        Type: int 
+                                        Variable Range: Local
+                                Right Operand
+                                    Binary Expression: +
+                                    Left Operand
+                                        Primary Expression: mid
+                                            Type: int 
+                                            Variable Range: Local
+                                    Right Operand
+                                        Constant Expression: 1
+                        Branch B
+                            Line 44: If Statement
+                                Condition
+                                    Binary Expression: >
+                                    Left Operand
+                                        Primary Expression: midVal
+                                            Type: int 
+                                            Variable Range: Local
+                                    Right Operand
+                                        Primary Expression: key
+                                            Type: int 
+                                            Variable Range: Local
+                                Branch A
+                                    Line 45: One Line Statement
+                                        Binary Expression: =
+                                        Left Operand
+                                            Primary Expression: high
+                                                Type: int 
+                                                Variable Range: Local
+                                        Right Operand
+                                            Binary Expression: -
+                                            Left Operand
+                                                Primary Expression: mid
+                                                    Type: int 
+                                                    Variable Range: Local
+                                            Right Operand
+                                                Constant Expression: 1
+                                Branch B
+                                    Line 47: Jump Statement: return
+                                        Primary Expression: mid
+                                            Type: int 
+                                            Variable Range: Local
+        Line 49: Jump Statement: return
+            Unary Expression: -
+            Operand
+                Constant Expression: 1
+
+
+Line 52: Function Definition
+    Function Name: block
+    Return Type: void 
+    Parameter List: (null)
+    Function Body
+        Line 54: Local Variable Declaration
+            Variable Name: i
+            Variable Type: int 
+            Variable Name: j
+            Variable Type: int 
+            Variable Name: n
+            Variable Type: int 
+            Variable Name: k
+            Variable Type: int 
+            Variable Name: row
+            Variable Type: int 
+        Line 55: Block Statement
+            Line 56: While Statement
+                Condition
+                    Binary Expression: >
+                    Left Operand
+                        Primary Expression: row
+                            Type: int 
+                            Variable Range: Local
+                    Right Operand
+                        Constant Expression: 0
+                Loop Body
+                    Line 57: Block Statement
+                        Line 58: For Statement
+                            Initialization
+                                Binary Expression: =
+                                Left Operand
+                                    Primary Expression: n
+                                        Type: int 
+                                        Variable Range: Local
+                                Right Operand
+                                    Constant Expression: 0
+                            Condition
+                                Binary Expression: <
+                                Left Operand
+                                    Primary Expression: n
+                                        Type: int 
+                                        Variable Range: Local
+                                Right Operand
+                                    Primary Expression: row
+                                        Type: int 
+                                        Variable Range: Local
+                            Update
+                                Postfix Expression: ++
+                                Operand
+                                    Primary Expression: n
+                                        Type: int 
+                                        Variable Range: Local
+                            Loop Body
+                                Line 59: Block Statement
+                                    Line 60: For Statement
+                                        Initialization
+                                            Binary Expression: =
+                                            Left Operand
+                                                Primary Expression: i
+                                                    Type: int 
+                                                    Variable Range: Local
+                                            Right Operand
+                                                Primary Expression: n
+                                                    Type: int 
+                                                    Variable Range: Local
+                                        Condition
+                                            Binary Expression: <
+                                            Left Operand
+                                                Primary Expression: i
+                                                    Type: int 
+                                                    Variable Range: Local
+                                            Right Operand
+                                                Parenthesis: ()
+                                                                                                    Binary Expression: -
+                                                    Left Operand
+                                                        Primary Expression: row
+                                                            Type: int 
+                                                            Variable Range: Local
+                                                    Right Operand
+                                                        Constant Expression: 1
+                                        Update
+                                            Postfix Expression: ++
+                                            Operand
+                                                Primary Expression: i
+                                                    Type: int 
+                                                    Variable Range: Local
+                                        Loop Body
+                                            Line 61: If Statement
+                                                Condition
+                                                    Binary Expression: ==
+                                                    Left Operand
+                                                        Primary Expression: i
+                                                            Type: int 
+                                                            Variable Range: Local
+                                                    Right Operand
+                                                        Constant Expression: 90
+                                                Branch A
+                                                    Line 62: Jump Statement: break
+                                                Branch B
+                                                    Line 64: Jump Statement: continue
+                                    Line 65: For Statement
+                                        Initialization
+                                            Binary Expression: =
+                                            Left Operand
+                                                Primary Expression: j
+                                                    Type: int 
+                                                    Variable Range: Local
+                                            Right Operand
+                                                Constant Expression: 0
+                                        Condition
+                                            Binary Expression: <=
+                                            Left Operand
+                                                Primary Expression: j
+                                                    Type: int 
+                                                    Variable Range: Local
+                                            Right Operand
+                                                Primary Expression: n
+                                                    Type: int 
+                                                    Variable Range: Local
+                                        Update
+                                            Postfix Expression: ++
+                                            Operand
+                                                Primary Expression: j
+                                                    Type: int 
+                                                    Variable Range: Local
+                                        Loop Body
+                                            Line 66: Block Statement
+                                                Line 67: If Statement
+                                                    Condition
+                                                        Binary Expression: ==
+                                                        Left Operand
+                                                            Primary Expression: j
+                                                                Type: int 
+                                                                Variable Range: Local
+                                                        Right Operand
+                                                            Constant Expression: 0
+                                                    Branch A
+                                                        Line 68: One Line Statement
+                                                            Binary Expression: =
+                                                            Left Operand
+                                                                Primary Expression: k
+                                                                    Type: int 
+                                                                    Variable Range: Local
+                                                            Right Operand
+                                                                Constant Expression: 1
+                                                    Branch B
+                                                        Line 70: One Line Statement
+                                                            Binary Expression: =
+                                                            Left Operand
+                                                                Primary Expression: k
+                                                                    Type: int 
+                                                                    Variable Range: Local
+                                                            Right Operand
+                                                                Binary Expression: /
+                                                                Left Operand
+                                                                    Binary Expression: *
+                                                                    Left Operand
+                                                                        Primary Expression: k
+                                                                            Type: int 
+                                                                            Variable Range: Local
+                                                                    Right Operand
+                                                                        Parenthesis: ()
+                                                                                                                                                    Binary Expression: +
+                                                                            Left Operand
+                                                                                Binary Expression: -
+                                                                                Left Operand
+                                                                                    Primary Expression: n
+                                                                                        Type: int 
+                                                                                        Variable Range: Local
+                                                                                Right Operand
+                                                                                    Primary Expression: j
+                                                                                        Type: int 
+                                                                                        Variable Range: Local
+                                                                            Right Operand
+                                                                                Constant Expression: 1
+                                                                Right Operand
+                                                                    Primary Expression: j
+                                                                        Type: int 
+                                                                        Variable Range: Local
+
+
