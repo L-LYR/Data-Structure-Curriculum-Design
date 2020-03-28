@@ -37,6 +37,13 @@ void MainWindow::do_mlpc(const QStringList &argv, QString &ret)
 
 void MainWindow::mlpc()
 {
+    if(curFileName == "")
+    {
+        QMessageBox::warning(this, tr("Warning"),
+                             tr("No input file!"));
+        return ;
+    }
+
     QString ret;
     do_mlpc(QStringList({"-l", curFileName}), ret);
     TreeModel* tree = new TreeModel(QStringList({ "Token", "Type" }), ret);

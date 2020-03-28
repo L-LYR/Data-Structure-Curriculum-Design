@@ -10,4 +10,3 @@ build*
 *.user
 *.docs
 taskbook
-gui_dump

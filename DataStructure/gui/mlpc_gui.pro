@@ -45,5 +45,5 @@ INPUT_FILES.path = $$OUT_PWD/testfiles
 
 COPIES += BIN
 
-BIN.files = $$files(../bin/*)
+BIN.files = $$files(../bin/mlpc.exe)
 BIN.path = $$OUT_PWD
