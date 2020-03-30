@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>img/Hammer.ico</file>
         <file>img/Open.png</file>
+        <file>img/Help.png</file>
+        <file>img/Expand.png</file>
     </qresource>
 </RCC>

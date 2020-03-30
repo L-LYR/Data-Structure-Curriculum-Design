@@ -1,0 +1,83 @@
+Line 2: Global Declaration
+    Global Variable Declaration
+        Variable Name: a
+        Variable Type: int 
+
+
+Line 4: Global Declaration
+    Global Variable Declaration
+        Variable Name: ch1
+        Variable Type: char 
+        Variable Name: ch2
+        Variable Type: char 
+
+
+Line 6: Global Declaration
+    Global Variable Declaration
+        Variable Name: p
+        Variable Type: void *
+        Variable Name: q
+        Variable Type: void **
+        Variable Name: o
+        Variable Type: void ***
+
+
+Line 8: Global Declaration
+    Global Variable Declaration
+        Variable Name: m_89
+        Variable Type: float 
+        Variable Name: ___
+        Variable Type: float 
+        Variable Name: _999_
+        Variable Type: float 
+
+
+Line 10: Global Declaration
+    Function Declaration
+        Function Name: _func1
+        Return Type: void ***
+        Parameter List
+            Variable Name: i
+            Variable Type: int 
+            Variable Name: f
+            Variable Type: float 
+            Variable Name: c
+            Variable Type: char 
+
+
+Line 11: Global Declaration
+    Function Declaration
+        Function Name: __func2
+        Return Type: char 
+        Parameter List
+            Variable Name: c
+            Variable Type: char ***
+            Variable Name: __idx__
+            Variable Type: int 
+
+
+Line 12: Global Declaration
+    Function Declaration
+        Function Name: _func3_
+        Return Type: float *
+        Parameter List
+            Variable Name: c
+            Variable Type: char *
+            Variable Name: i
+            Variable Type: int 
+
+
+Line 13: Global Declaration
+    Function Declaration
+        Function Name: vf1
+        Return Type: void 
+        Parameter List: (null)
+
+
+Line 14: Global Declaration
+    Function Declaration
+        Function Name: vf2
+        Return Type: void 
+        Parameter List: (null)
+
+

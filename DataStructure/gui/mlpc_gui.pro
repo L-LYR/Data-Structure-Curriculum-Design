@@ -38,10 +38,10 @@ RC_ICONS += ./img/Hammer.ico
 
 COPIES += INPUT_FILES
 
-INPUT_FILES.files += $$files(../test/ASTGenarationTest/*)\
-                     $$files(../test/errorTest/*)\
-                     $$files(../test/LexicalAnalysisTest/*)
-INPUT_FILES.path = $$OUT_PWD/testfiles
+INPUT_FILES.files += $$files(../test/ASTGenarationTest/*.c)\
+                     $$files(../test/errorTest/*.c)\
+                     $$files(../test/LexicalAnalysisTest/*.c)
+INPUT_FILES.path = $$OUT_PWD/test
 
 COPIES += BIN
 
