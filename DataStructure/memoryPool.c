@@ -64,7 +64,7 @@ void readFromFile()
     }
     memset(src, 0, poolSize);
 
-    if ((ret = fread(src, 1, fileSize, fp)) < fileSize)
+    if ((ret = fread(src, sizeof(char), fileSize, fp)) < fileSize)
     {
         printf("File read error! Return %d and expect %d.\n", ret, fileSize);
         exit(-1);

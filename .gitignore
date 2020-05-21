@@ -10,3 +10,5 @@ build*
 *.user
 *.docs
 taskbook
+计卓*
+*.zip
